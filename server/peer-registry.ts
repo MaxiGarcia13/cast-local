@@ -1,5 +1,5 @@
 import type { WebSocket } from 'ws';
-import type { PeerInfo, ServerMessage } from '../src/domain/protocol';
+import type { PeerInfo, ServerMessage } from '@/domain/p2p';
 
 interface Client {
   ws: WebSocket;

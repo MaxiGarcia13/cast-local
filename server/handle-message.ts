@@ -1,5 +1,5 @@
 import type { WebSocket } from 'ws';
-import type { ClientMessage, PeerInfo } from '../src/domain/protocol';
+import type { ClientMessage, PeerInfo } from '@/domain/p2p';
 import {
   broadcast,
   hasPeer,

@@ -1,6 +1,6 @@
 import process from 'node:process';
 import { WebSocketServer } from 'ws';
-import { SIGNALING_PORT } from '../src/domain/signaling-url';
+import { SIGNALING_PORT } from '@/domain/p2p';
 import { handleClientMessage } from './handle-message';
 import { lanAddresses } from './lan-addresses';
 import { removePeer } from './peer-registry';
