@@ -25,7 +25,14 @@ export interface TransferProgress {
   filesTotal: number;
   currentFileName: string | null;
   completedFiles: string[];
+  receivedText: string | null;
   error: string | null;
+}
+
+export interface SendPayload {
+  files: File[];
+  fileMetas: FileMeta[];
+  text: string | null;
 }
 
 const BUFFER_HIGH_WATER_MARK = 256 * 1024;
@@ -78,6 +85,7 @@ function createIdleProgress(): TransferProgress {
     filesTotal: 0,
     currentFileName: null,
     completedFiles: [],
+    receivedText: null,
     error: null,
   };
 }
@@ -100,14 +108,12 @@ export function useFileTransfer() {
     };
   }
 
-  async function sendFiles(
-    channel: RTCDataChannel,
-    files: File[],
-    fileMetas: FileMeta[],
-  ) {
+  async function sendPayload(channel: RTCDataChannel, payload: SendPayload) {
     await waitForChannelOpen(channel);
 
-    const bytesTotal = fileMetas.reduce((sum, file) => sum + file.size, 0);
+    const text = payload.text?.trim() ? payload.text : null;
+    const bytesTotal = payload.fileMetas.reduce((sum, file) => sum + file.size, 0)
+      + (text ? new TextEncoder().encode(text).byteLength : 0);
     const completedFiles: string[] = [];
 
     progress.value = {
@@ -115,22 +121,37 @@ export function useFileTransfer() {
       bytesDone: 0,
       bytesTotal,
       filesDone: 0,
-      filesTotal: fileMetas.length,
-      currentFileName: fileMetas[0]?.name ?? null,
+      filesTotal: payload.fileMetas.length,
+      currentFileName: text ? 'Text' : payload.fileMetas[0]?.name ?? null,
       completedFiles: [],
+      receivedText: null,
       error: null,
     };
 
     const manifest: TransferManifest = {
       type: 'manifest',
       transferId: crypto.randomUUID(),
-      files: fileMetas,
+      files: payload.fileMetas,
+      hasText: Boolean(text),
     };
     channel.send(JSON.stringify(manifest));
 
-    for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
-      const file = files[fileIndex]!;
-      const meta = fileMetas[fileIndex]!;
+    if (text) {
+      const textMessage: DataChannelControl = { type: 'text', text };
+      channel.send(JSON.stringify(textMessage));
+      progress.value = {
+        ...progress.value,
+        bytesDone: Math.min(
+          progress.value.bytesDone + new TextEncoder().encode(text).byteLength,
+          bytesTotal,
+        ),
+        currentFileName: payload.fileMetas[0]?.name ?? null,
+      };
+    }
+
+    for (let fileIndex = 0; fileIndex < payload.files.length; fileIndex++) {
+      const file = payload.files[fileIndex]!;
+      const meta = payload.fileMetas[fileIndex]!;
       progress.value = {
         ...progress.value,
         currentFileName: meta.name,
@@ -142,12 +163,12 @@ export function useFileTransfer() {
         if (channel.readyState !== 'open') {
           throw new Error('Data channel closed during send');
         }
-        const payload = await readChunk(file, index);
-        channel.send(encodeChunk(meta.id, index, total, payload));
+        const chunkPayload = await readChunk(file, index);
+        channel.send(encodeChunk(meta.id, index, total, chunkPayload));
         progress.value = {
           ...progress.value,
           bytesDone: Math.min(
-            progress.value.bytesDone + payload.byteLength,
+            progress.value.bytesDone + chunkPayload.byteLength,
             bytesTotal,
           ),
         };
@@ -171,7 +192,7 @@ export function useFileTransfer() {
       ...progress.value,
       phase: 'complete',
       bytesDone: bytesTotal,
-      filesDone: fileMetas.length,
+      filesDone: payload.fileMetas.length,
       currentFileName: null,
       completedFiles: [...completedFiles],
     };
@@ -185,6 +206,7 @@ export function useFileTransfer() {
     const completedFiles: string[] = [];
     let bytesTotal = 0;
     let bytesDone = 0;
+    let receivedText: string | null = null;
 
     progress.value = {
       phase: 'receiving',
@@ -194,6 +216,7 @@ export function useFileTransfer() {
       filesTotal: 0,
       currentFileName: null,
       completedFiles: [],
+      receivedText: null,
       error: null,
     };
 
@@ -237,9 +260,29 @@ export function useFileTransfer() {
           bytesTotal,
           filesDone: 0,
           filesTotal: message.files.length,
-          currentFileName: message.files[0]?.name ?? null,
+          currentFileName: message.hasText ? 'Text' : message.files[0]?.name ?? null,
           completedFiles: [],
+          receivedText: null,
           error: null,
+        };
+        return;
+      }
+
+      if (message.type === 'text') {
+        receivedText = message.text;
+        const textBytes = new TextEncoder().encode(message.text).byteLength;
+        bytesDone += textBytes;
+        if (bytesTotal === 0) {
+          bytesTotal = textBytes;
+        }
+        progress.value = {
+          ...progress.value,
+          receivedText,
+          bytesDone: Math.min(bytesDone, bytesTotal || bytesDone),
+          bytesTotal: bytesTotal || progress.value.bytesTotal,
+          currentFileName: filesById.size > 0
+            ? [...filesById.values()][0]?.name ?? null
+            : null,
         };
         return;
       }
@@ -274,6 +317,7 @@ export function useFileTransfer() {
           filesDone: completedFiles.length,
           currentFileName: null,
           completedFiles: [...completedFiles],
+          receivedText,
         };
         return;
       }
@@ -305,7 +349,7 @@ export function useFileTransfer() {
     progress,
     resetProgress,
     setError,
-    sendFiles,
+    sendPayload,
     attachReceiver,
     stopReceiver,
   };

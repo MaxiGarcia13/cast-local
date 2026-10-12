@@ -3,16 +3,22 @@ import type { useSignaling } from './use-signaling';
 import type { PeerInfo } from '@/domain/p2p';
 import { computed, ref, watch } from 'vue';
 import { fileToMeta } from '@/domain/p2p';
+import { textPreview } from '@/utils/text-preview';
 import { useFileTransfer } from './use-file-transfer';
 import { usePeerConnection } from './use-peer-connection';
 
 type Signaling = ReturnType<typeof useSignaling>;
 
-export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
+export function useCastTransfer(
+  signaling: Signaling,
+  files: Ref<File[]>,
+  text: Ref<string>,
+) {
   const remotePeerId = ref<string | null>(null);
   const role = ref<'idle' | 'sender' | 'receiver'>('idle');
   const pendingFiles = ref<File[]>([]);
   const pendingFileMetas = ref(fileToMetaList([]));
+  const pendingText = ref<string | null>(null);
   const waitingForAccept = ref(false);
 
   const fileTransfer = useFileTransfer();
@@ -21,6 +27,10 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
     const phase = fileTransfer.progress.value.phase;
     return waitingForAccept.value || phase === 'sending' || phase === 'receiving';
   });
+
+  const hasPayload = computed(() =>
+    files.value.length > 0 || text.value.trim().length > 0,
+  );
 
   const peerConnection = usePeerConnection({
     onIceCandidate: (candidate) => {
@@ -62,7 +72,11 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
 
   async function sendWhenReady(channel: RTCDataChannel) {
     try {
-      await fileTransfer.sendFiles(channel, pendingFiles.value, pendingFileMetas.value);
+      await fileTransfer.sendPayload(channel, {
+        files: pendingFiles.value,
+        fileMetas: pendingFileMetas.value,
+        text: pendingText.value,
+      });
     } catch (error) {
       fileTransfer.setError(error, 'Send failed');
     }
@@ -78,6 +92,7 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
     remotePeerId.value = null;
     pendingFiles.value = [];
     pendingFileMetas.value = [];
+    pendingText.value = null;
     peerConnection.close();
     fileTransfer.stopReceiver();
     fileTransfer.resetProgress();
@@ -93,18 +108,22 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
   }
 
   function requestTransfer(peer: PeerInfo) {
-    if (files.value.length === 0 || isBusy.value) {
+    if (!hasPayload.value || isBusy.value) {
       return;
     }
 
     resetTransferState();
     role.value = 'sender';
     remotePeerId.value = peer.id;
-    // Keep a dedicated send snapshot so later transfers don't re-touch picker Files.
     pendingFiles.value = [...files.value];
     pendingFileMetas.value = fileToMetaList(pendingFiles.value);
+    pendingText.value = text.value.trim() || null;
     waitingForAccept.value = true;
-    signaling.offerTransfer(peer.id, pendingFileMetas.value);
+    signaling.offerTransfer(
+      peer.id,
+      pendingFileMetas.value,
+      textPreview(pendingText.value ?? ''),
+    );
   }
 
   function acceptIncoming() {
@@ -219,6 +238,7 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
     incomingPeerName,
     waitingForAccept,
     isBusy,
+    hasPayload,
     requestTransfer,
     acceptIncoming,
     declineIncoming,

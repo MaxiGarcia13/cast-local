@@ -29,7 +29,7 @@ export interface IceCandidate {
 
 export type ClientMessage
   = | { type: 'join'; name: string; device?: string }
-    | { type: 'offer-transfer'; to: string; files: FileMeta[] }
+    | { type: 'offer-transfer'; to: string; files: FileMeta[]; textPreview?: string | null }
     | { type: 'accept'; to: string }
     | { type: 'decline'; to: string }
     | { type: 'rtc-offer'; to: string; sdp: SessionDescription }
@@ -41,7 +41,7 @@ export type ServerMessage
     | { type: 'peers'; peers: PeerInfo[] }
     | { type: 'peer-joined'; peer: PeerInfo }
     | { type: 'peer-left'; id: string }
-    | { type: 'offer-transfer'; from: string; files: FileMeta[] }
+    | { type: 'offer-transfer'; from: string; files: FileMeta[]; textPreview?: string | null }
     | { type: 'accept'; from: string }
     | { type: 'decline'; from: string }
     | { type: 'rtc-offer'; from: string; sdp: SessionDescription }
@@ -54,11 +54,13 @@ export interface TransferManifest {
   type: 'manifest';
   transferId: string;
   files: FileMeta[];
+  hasText?: boolean;
 }
 
 /** Progress / control messages on the data channel (JSON strings). */
 export type DataChannelControl
   = | TransferManifest
+    | { type: 'text'; text: string }
     | { type: 'file-complete'; fileId: string }
     | { type: 'transfer-complete' }
     | { type: 'transfer-error'; message: string };

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TransferProgress } from '@/composables/use-file-transfer';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { formatBytes } from '@/utils/format-bytes';
 
 const props = defineProps<{
@@ -10,6 +10,8 @@ const props = defineProps<{
 defineEmits<{
   dismiss: [];
 }>();
+
+const copyState = ref<'idle' | 'copied' | 'failed'>('idle');
 
 const percent = computed(() => {
   if (props.progress.bytesTotal <= 0) {
@@ -25,6 +27,9 @@ const label = computed(() => {
     case 'receiving':
       return 'Receiving';
     case 'complete':
+      if (props.progress.receivedText && props.progress.filesTotal === 0) {
+        return 'Text received';
+      }
       return props.progress.filesTotal > 1 ? 'All files complete' : 'Complete';
     case 'error':
       return 'Transfer failed';
@@ -36,6 +41,21 @@ const label = computed(() => {
 const canDismiss = computed(() =>
   props.progress.phase === 'complete' || props.progress.phase === 'error',
 );
+
+async function copyText() {
+  if (!props.progress.receivedText) {
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(props.progress.receivedText);
+    copyState.value = 'copied';
+    window.setTimeout(() => {
+      copyState.value = 'idle';
+    }, 1500);
+  } catch {
+    copyState.value = 'failed';
+  }
+}
 </script>
 
 <template>
@@ -85,6 +105,22 @@ const canDismiss = computed(() =>
     >
       {{ formatBytes(progress.bytesDone) }} / {{ formatBytes(progress.bytesTotal) }}
     </p>
+
+    <div
+      v-if="progress.receivedText"
+      class="mt-4 rounded-xl bg-cast-ink/50 px-4 py-4"
+    >
+      <p class="whitespace-pre-wrap break-words text-sm text-cast-fog">
+        {{ progress.receivedText }}
+      </p>
+      <button
+        type="button"
+        class="mt-4 rounded-xl bg-cast-signal px-4 py-2 text-sm font-semibold text-cast-ink transition hover:brightness-110"
+        @click="copyText"
+      >
+        {{ copyState === 'copied' ? 'Copied' : copyState === 'failed' ? 'Copy failed' : 'Copy text' }}
+      </button>
+    </div>
 
     <ul
       v-if="progress.completedFiles.length"

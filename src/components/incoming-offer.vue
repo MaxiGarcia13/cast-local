@@ -1,16 +1,31 @@
 <script setup lang="ts">
 import type { FileMeta } from '@/domain/p2p';
+import { computed } from 'vue';
 import { formatBytes } from '@/utils/format-bytes';
 
-defineProps<{
+const props = defineProps<{
   peerName: string;
   files: FileMeta[];
+  textPreview: string | null;
 }>();
 
 defineEmits<{
   accept: [];
   decline: [];
 }>();
+
+const summary = computed(() => {
+  const parts: string[] = [];
+  if (props.textPreview) {
+    parts.push('text');
+  }
+  if (props.files.length === 1) {
+    parts.push('1 file');
+  } else if (props.files.length > 1) {
+    parts.push(`${props.files.length} files`);
+  }
+  return parts.join(' and ') || 'a transfer';
+});
 </script>
 
 <template>
@@ -20,10 +35,25 @@ defineEmits<{
         Incoming transfer
       </p>
       <p class="mt-2 text-sm text-cast-mist">
-        {{ peerName }} wants to send {{ files.length }} file{{ files.length === 1 ? '' : 's' }}
+        {{ peerName }} wants to send {{ summary }}
       </p>
 
-      <ul class="mt-4 flex max-h-48 flex-col gap-2 overflow-y-auto">
+      <div
+        v-if="textPreview"
+        class="mt-4 rounded-xl bg-cast-ink/40 px-4 py-4"
+      >
+        <p class="text-xs font-medium uppercase tracking-wide text-cast-mist">
+          Text
+        </p>
+        <p class="mt-2 whitespace-pre-wrap break-words text-sm text-cast-fog">
+          {{ textPreview }}
+        </p>
+      </div>
+
+      <ul
+        v-if="files.length"
+        class="mt-4 flex max-h-48 flex-col gap-2 overflow-y-auto"
+      >
         <li
           v-for="file in files"
           :key="file.id"

@@ -52,6 +52,7 @@ export function handleClientMessage(
         type: 'offer-transfer',
         from: peerId,
         files: message.files,
+        textPreview: message.textPreview ?? null,
       });
       break;
     case 'accept':

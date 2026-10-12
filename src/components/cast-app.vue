@@ -7,6 +7,7 @@ import ChevronLeftIcon from '@/components/icons/chevron-left.vue';
 import CubeSendIcon from '@/components/icons/cube-send.vue';
 import IncomingOffer from '@/components/incoming-offer.vue';
 import ShareRadar from '@/components/share-radar.vue';
+import TextComposer from '@/components/text-composer.vue';
 import TransferProgress from '@/components/transfer-progress.vue';
 import { useCastTransfer } from '@/composables/use-cast-transfer';
 import { useSignaling } from '@/composables/use-signaling';
@@ -16,6 +17,7 @@ type Phase = 'pick' | 'radar';
 
 const phase = ref<Phase>('pick');
 const files = ref<File[]>([]);
+const text = ref('');
 
 const signaling = useSignaling();
 const {
@@ -32,14 +34,14 @@ const {
   incomingPeerName,
   waitingForAccept,
   isBusy,
+  hasPayload,
   requestTransfer,
   acceptIncoming,
   declineIncoming,
   resetTransferState,
   dismissProgress,
-} = useCastTransfer(signaling, files);
+} = useCastTransfer(signaling, files, text);
 
-const canShare = computed(() => files.value.length > 0);
 const selfName = computed(() => self.value?.name ?? guessDeviceName());
 const statusLabel = computed(() => {
   switch (status.value) {
@@ -54,12 +56,25 @@ const statusLabel = computed(() => {
   }
 });
 
+const readySummary = computed(() => {
+  const parts: string[] = [];
+  if (files.value.length === 1) {
+    parts.push('1 file');
+  } else if (files.value.length > 1) {
+    parts.push(`${files.value.length} files`);
+  }
+  if (text.value.trim()) {
+    parts.push('text');
+  }
+  return parts.length ? `${parts.join(' + ')} ready` : 'Nothing ready';
+});
+
 onMounted(() => {
   connect();
 });
 
 function startShare() {
-  if (!canShare.value) {
+  if (!hasPayload.value) {
     return;
   }
   phase.value = 'radar';
@@ -86,7 +101,7 @@ function onSelectPeer(peer: PeerInfo) {
         Cast Local
       </p>
       <p class="text-base text-cast-mist md:text-lg">
-        Drop files. Find a device. Send over the air on your network.
+        Drop files or text. Find a device. Send over the air on your network.
       </p>
       <p
         class="text-xs"
@@ -99,11 +114,12 @@ function onSelectPeer(peer: PeerInfo) {
     <main class="flex flex-1 flex-col items-center gap-8">
       <template v-if="phase === 'pick'">
         <FilePicker v-model="files" />
+        <TextComposer v-model="text" />
 
         <button
           type="button"
           class="inline-flex items-center gap-2 rounded-xl bg-cast-signal px-8 py-4 font-display text-lg font-bold text-cast-ink transition enabled:hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
-          :disabled="!canShare"
+          :disabled="!hasPayload"
           @click="startShare"
         >
           <CubeSendIcon class="size-6" />
@@ -123,7 +139,7 @@ function onSelectPeer(peer: PeerInfo) {
               Back
             </button>
             <p class="text-sm text-cast-mist">
-              {{ files.length }} file{{ files.length === 1 ? '' : 's' }} ready
+              {{ readySummary }}
             </p>
           </div>
 
@@ -159,6 +175,7 @@ function onSelectPeer(peer: PeerInfo) {
       v-if="incomingOffer"
       :peer-name="incomingPeerName"
       :files="incomingOffer.files"
+      :text-preview="incomingOffer.textPreview"
       @accept="acceptIncoming"
       @decline="declineIncoming"
     />

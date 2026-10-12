@@ -10,7 +10,11 @@ export function useSignalingTransfer(send: (message: ClientMessage) => void) {
   function handleMessage(message: ServerMessage): boolean {
     switch (message.type) {
       case 'offer-transfer':
-        incomingOffer.value = { from: message.from, files: message.files };
+        incomingOffer.value = {
+          from: message.from,
+          files: message.files,
+          textPreview: message.textPreview ?? null,
+        };
         return true;
       case 'accept':
         lastAcceptFrom.value = message.from;
@@ -23,8 +27,12 @@ export function useSignalingTransfer(send: (message: ClientMessage) => void) {
     }
   }
 
-  function offerTransfer(to: string, files: FileMeta[]) {
-    send({ type: 'offer-transfer', to, files });
+  function offerTransfer(
+    to: string,
+    files: FileMeta[],
+    textPreview: string | null = null,
+  ) {
+    send({ type: 'offer-transfer', to, files, textPreview });
   }
 
   function acceptTransfer(to: string) {
