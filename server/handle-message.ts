@@ -1,13 +1,14 @@
 import type { WebSocket } from 'ws';
 import type { ClientMessage, PeerInfo } from '@/domain/p2p';
 import {
-  broadcast,
+  broadcastToRoom,
   hasPeer,
-  listPeers,
+  listPeersInRoom,
   registerPeer,
   relay,
   send,
 } from './peer-registry';
+import { joinRoom } from './room-registry';
 
 export function handleClientMessage(
   ws: WebSocket,
@@ -22,9 +23,15 @@ export function handleClientMessage(
     return peerId;
   }
 
-  if (message.type === 'join') {
+  if (message.type === 'join-room') {
     if (peerId) {
       send(ws, { type: 'error', message: 'Already joined' });
+      return peerId;
+    }
+
+    const roomId = message.roomId?.trim();
+    if (!roomId) {
+      send(ws, { type: 'error', message: 'Room id is required' });
       return peerId;
     }
 
@@ -34,15 +41,17 @@ export function handleClientMessage(
     const peer: PeerInfo = { id: joinedPeerId, name, device };
 
     registerPeer(ws, peer);
-    send(ws, { type: 'welcome', peer });
-    send(ws, { type: 'peers', peers: listPeers(joinedPeerId) });
-    broadcast({ type: 'peer-joined', peer }, joinedPeerId);
+    joinRoom(roomId, joinedPeerId);
+
+    send(ws, { type: 'welcome', peer, roomId });
+    send(ws, { type: 'peers', peers: listPeersInRoom(roomId, joinedPeerId) });
+    broadcastToRoom(roomId, { type: 'peer-joined', peer }, joinedPeerId);
 
     return joinedPeerId;
   }
 
   if (!peerId || !hasPeer(peerId)) {
-    send(ws, { type: 'error', message: 'Join before sending messages' });
+    send(ws, { type: 'error', message: 'Join a room before sending messages' });
     return peerId;
   }
 

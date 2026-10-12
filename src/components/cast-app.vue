@@ -70,7 +70,7 @@ const readySummary = computed(() => {
 });
 
 onMounted(() => {
-  connect();
+  connect({ roomId: 'dev' });
 });
 
 function startShare() {

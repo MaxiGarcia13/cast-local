@@ -55,6 +55,7 @@ export function useSignaling() {
     lastRtcAnswer: rtc.lastRtcAnswer,
     iceVersion: rtc.iceVersion,
     takeIceCandidates: rtc.takeIceCandidates,
+    currentRoomId: socket.currentRoomId,
     connect: socket.connect,
     disconnect: socket.disconnect,
     send: socket.send,

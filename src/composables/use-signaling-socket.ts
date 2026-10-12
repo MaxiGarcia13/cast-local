@@ -9,9 +9,16 @@ interface UseSignalingSocketOptions {
   onDisconnected: () => void;
 }
 
+export interface ConnectOptions {
+  roomId: string;
+  name?: string;
+  device?: string;
+}
+
 export function useSignalingSocket(options: UseSignalingSocketOptions) {
   const status = ref<SignalingStatus>('idle');
   const lastError = ref<string | null>(null);
+  const currentRoomId = ref<string | null>(null);
 
   let socket: WebSocket | null = null;
 
@@ -23,12 +30,23 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
     socket.send(JSON.stringify(message));
   }
 
-  function connect(name = guessDeviceName(), device = guessDeviceType()) {
+  function connect(connectOptions: ConnectOptions) {
+    const roomId = connectOptions.roomId.trim();
+    if (!roomId) {
+      lastError.value = 'Room id is required';
+      status.value = 'error';
+      return;
+    }
+
     if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
       return;
     }
 
+    const name = connectOptions.name ?? guessDeviceName();
+    const device = connectOptions.device ?? guessDeviceType();
+
     lastError.value = null;
+    currentRoomId.value = roomId;
     status.value = 'connecting';
 
     const nextSocket = new WebSocket(defaultSignalingUrl());
@@ -39,7 +57,7 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
         return;
       }
       status.value = 'connected';
-      send({ type: 'join', name, device });
+      send({ type: 'join-room', roomId, name, device });
     });
 
     nextSocket.addEventListener('message', (event) => {
@@ -58,6 +76,7 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
         return;
       }
       socket = null;
+      currentRoomId.value = null;
       options.onDisconnected();
       if (status.value !== 'error') {
         status.value = 'idle';
@@ -76,6 +95,7 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
   function disconnect() {
     const activeSocket = socket;
     socket = null;
+    currentRoomId.value = null;
     status.value = 'idle';
     lastError.value = null;
     options.onDisconnected();
@@ -90,6 +110,7 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
   return {
     status,
     lastError,
+    currentRoomId,
     send,
     connect,
     disconnect,
