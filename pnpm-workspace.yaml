@@ -1,15 +1,8 @@
 minimumReleaseAgeExcludePrune: true
-minimumReleaseAgeExclude:
-  - '@astrojs/vercel@11.0.14'
 
 trustPolicy: no-downgrade
 trustPolicyExclude:
   - semver
-  - '@vercel/functions'
-  - '@vercel/routing-utils'
-  - '@vercel/oidc'
-  - '@vercel/cli-config'
-  - '@vercel/cli-exec'
 
 shellEmulator: true
 
