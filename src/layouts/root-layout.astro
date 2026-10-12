@@ -1,9 +1,13 @@
 ---
+import { name, description } from '../../package.json';
 import { ClientRouter } from 'astro:transitions';
 import '@/styles/global.css';
+import { capitalize } from 'vue';
 
-const title = 'Cast Local';
-const description = 'Cast Local — peer-to-peer file transfer on your local network.';
+const title = name
+  .split('-')
+  .map((word) => capitalize(word))
+  .join(' ');
 const ogImage = new URL('/og-image.png', Astro.url).href;
 ---
 
