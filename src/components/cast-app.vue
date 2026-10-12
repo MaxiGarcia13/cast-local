@@ -5,7 +5,10 @@ import FilePicker from '@/components/file-picker.vue';
 import BrandIcon from '@/components/icons/brand.vue';
 import ChevronLeftIcon from '@/components/icons/chevron-left.vue';
 import CubeSendIcon from '@/components/icons/cube-send.vue';
+import IncomingOffer from '@/components/incoming-offer.vue';
 import ShareRadar from '@/components/share-radar.vue';
+import TransferProgress from '@/components/transfer-progress.vue';
+import { useCastTransfer } from '@/composables/use-cast-transfer';
 import { useSignaling } from '@/composables/use-signaling';
 import { guessDeviceName } from '@/utils/device-name';
 
@@ -13,15 +16,26 @@ type Phase = 'pick' | 'radar';
 
 const phase = ref<Phase>('pick');
 const files = ref<File[]>([]);
-const selectedPeer = ref<PeerInfo | null>(null);
 
+const signaling = useSignaling();
 const {
   peers,
   self,
   status,
   lastError,
   connect,
-} = useSignaling();
+} = signaling;
+
+const {
+  progress,
+  incomingOffer,
+  incomingPeerName,
+  waitingForAccept,
+  requestTransfer,
+  acceptIncoming,
+  declineIncoming,
+  resetTransferState,
+} = useCastTransfer(signaling, files);
 
 const canShare = computed(() => files.value.length > 0);
 const selfName = computed(() => self.value?.name ?? guessDeviceName());
@@ -46,17 +60,16 @@ function startShare() {
   if (!canShare.value) {
     return;
   }
-  selectedPeer.value = null;
   phase.value = 'radar';
 }
 
 function backToPick() {
   phase.value = 'pick';
-  selectedPeer.value = null;
+  resetTransferState();
 }
 
 function onSelectPeer(peer: PeerInfo) {
-  selectedPeer.value = peer;
+  requestTransfer(peer);
 }
 </script>
 
@@ -119,13 +132,28 @@ function onSelectPeer(peer: PeerInfo) {
           />
 
           <p
-            v-if="selectedPeer"
+            v-if="waitingForAccept"
             class="text-sm text-cast-signal"
           >
-            Selected {{ selectedPeer.name }}
+            Waiting for accept…
           </p>
+
+          <TransferProgress :progress="progress" />
         </div>
       </template>
+
+      <TransferProgress
+        v-if="phase === 'pick' && progress.phase !== 'idle'"
+        :progress="progress"
+      />
     </main>
+
+    <IncomingOffer
+      v-if="incomingOffer"
+      :peer-name="incomingPeerName"
+      :files="incomingOffer.files"
+      @accept="acceptIncoming"
+      @decline="declineIncoming"
+    />
   </div>
 </template>
