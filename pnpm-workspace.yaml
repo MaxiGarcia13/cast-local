@@ -1,2 +1,10 @@
+minimumReleaseAgeExcludePrune: true
+
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  - semver
+
+shellEmulator: true
+
 allowBuilds:
   esbuild: true
