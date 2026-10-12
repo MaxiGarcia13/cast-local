@@ -83,13 +83,15 @@ export function assembleFile(
   total: number,
   mimeType: string,
 ): Blob {
-  const parts: BlobPart[] = [];
+  const parts: ArrayBuffer[] = [];
   for (let i = 0; i < total; i++) {
     const part = chunks.get(i);
     if (!part) {
       throw new Error(`Missing chunk ${i} of ${total}`);
     }
-    parts.push(part);
+    const buffer = new ArrayBuffer(part.byteLength);
+    new Uint8Array(buffer).set(part);
+    parts.push(buffer);
   }
   return new Blob(parts, { type: mimeType });
 }
