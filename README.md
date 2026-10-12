@@ -59,19 +59,31 @@ That starts:
 
 Then open the printed local/LAN URL on your machines, share something, and join the room from the other device.
 
+### Production
+
+```bash
+pnpm build
+pnpm start
+```
+
+`start` runs the built Node server (`dist/server/entry.mjs` on `HOST=0.0.0.0`) plus signaling on port `3001`.
+
 ### Useful scripts
 
 | Command | Description |
 | --- | --- |
-| `pnpm dev` | Web + signaling together |
+| `pnpm dev` | Web + signaling together (development) |
 | `pnpm dev:web` | Astro only |
 | `pnpm dev:server` | Signaling only |
 | `pnpm build` | Production build |
-| `pnpm preview` | Preview the build |
+| `pnpm start` | Built web + signaling (production) |
+| `pnpm start:web` | Built web only |
+| `pnpm start:server` | Signaling only (same as `dev:server`) |
+| `pnpm preview` | Astro preview of the build (no signaling) |
 | `pnpm lint` | ESLint |
 | `pnpm lint:fix` | ESLint with autofix |
 
-Override the signaling port with `SIGNALING_PORT` if needed (default `3001`).
+Override the web port with `PORT` (Astro default `4321`) and signaling with `SIGNALING_PORT` (default `3001`).
 
 ## Using it on a LAN
 
