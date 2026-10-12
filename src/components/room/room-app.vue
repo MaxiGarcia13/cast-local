@@ -147,6 +147,11 @@ function onSelectPeer(peer: PeerInfo) {
         @leave="leaveRoom"
       />
 
+      <RoomInvite
+        v-if="isHost"
+        :room-id="roomId"
+      />
+
       <RoomHostPanel
         v-if="isHost"
         :has-payload="hasPayload"
@@ -165,11 +170,6 @@ function onSelectPeer(peer: PeerInfo) {
           @dismiss="dismissProgress"
         />
       </div>
-
-      <RoomInvite
-        v-if="isHost"
-        :room-id="roomId"
-      />
     </main>
 
     <IncomingOffer

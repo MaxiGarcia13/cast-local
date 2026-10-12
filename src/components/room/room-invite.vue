@@ -22,7 +22,7 @@ async function renderQr(url: string) {
   try {
     qrDataUrl.value = await QRCode.toDataURL(url, {
       margin: 1,
-      width: 192,
+      width: 96,
       color: {
         dark: '#0a1228',
         light: '#ffffff',
@@ -55,28 +55,28 @@ watch(roomUrl, (url) => {
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col items-center gap-4 rounded-xl bg-cast-panel/80 px-4 py-6">
-    <p class="text-sm font-medium text-cast-fog">
-      Invite to this room
-    </p>
-
+  <div class="flex w-full max-w-lg items-center gap-3 rounded-xl bg-cast-panel/80 px-3 py-2.5">
     <img
       v-if="qrDataUrl"
       :src="qrDataUrl"
       alt="Room QR code"
-      class="size-48 rounded-xl bg-white p-2"
+      class="size-20 shrink-0 rounded-lg bg-white p-1"
     >
 
-    <p class="w-full break-all rounded-xl bg-cast-ink/50 px-4 py-2 text-center text-xs text-cast-mist">
-      {{ roomUrl }}
-    </p>
-
-    <button
-      type="button"
-      class="rounded-xl bg-cast-signal px-4 py-2 text-sm font-semibold text-cast-ink transition hover:brightness-110"
-      @click="copyLink"
-    >
-      {{ copyState === 'copied' ? 'Copied' : copyState === 'failed' ? 'Copy failed' : 'Copy link' }}
-    </button>
+    <div class="flex min-w-0 flex-1 flex-col gap-2">
+      <p class="text-xs font-medium text-cast-fog">
+        Invite to this room
+      </p>
+      <p class="truncate text-[11px] text-cast-mist">
+        {{ roomUrl }}
+      </p>
+      <button
+        type="button"
+        class="self-start rounded-lg bg-cast-signal px-3 py-1.5 text-xs font-semibold text-cast-ink transition hover:brightness-110"
+        @click="copyLink"
+      >
+        {{ copyState === 'copied' ? 'Copied' : copyState === 'failed' ? 'Copy failed' : 'Copy link' }}
+      </button>
+    </div>
   </div>
 </template>
