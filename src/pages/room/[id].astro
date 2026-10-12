@@ -1,0 +1,11 @@
+---
+import RoomApp from '@/components/room-app.vue';
+import RootLayout from '@/layouts/root-layout.astro';
+
+const { id } = Astro.params;
+const roomId = id ?? '';
+---
+
+<RootLayout>
+  <RoomApp client:load roomId={roomId} />
+</RootLayout>
