@@ -1,49 +1,20 @@
 import type { WebSocket } from 'ws';
+import type {
+  ClientMessage,
+  PeerInfo,
+  ServerMessage,
+} from '../src/lib/protocol';
 import { networkInterfaces } from 'node:os';
 import process from 'node:process';
 import { WebSocketServer } from 'ws';
+import { SIGNALING_PORT } from '../src/lib/protocol';
 
-const PORT = Number(process.env.SIGNALING_PORT) || 3001;
-
-interface PeerInfo {
-  id: string;
-  name: string;
-  device: string;
-}
+const PORT = Number(process.env.SIGNALING_PORT) || SIGNALING_PORT;
 
 interface Client {
   ws: WebSocket;
   peer: PeerInfo;
 }
-
-type ClientMessage
-  = | { type: 'join'; name: string; device?: string }
-    | { type: 'offer-transfer'; to: string; files: FileMeta[] }
-    | { type: 'accept'; to: string }
-    | { type: 'decline'; to: string }
-    | { type: 'rtc-offer'; to: string; sdp: RTCSessionDescriptionInit }
-    | { type: 'rtc-answer'; to: string; sdp: RTCSessionDescriptionInit }
-    | { type: 'ice-candidate'; to: string; candidate: RTCIceCandidateInit | null };
-
-interface FileMeta {
-  id: string;
-  name: string;
-  size: number;
-  type: string;
-}
-
-type ServerMessage
-  = | { type: 'welcome'; peer: PeerInfo }
-    | { type: 'peers'; peers: PeerInfo[] }
-    | { type: 'peer-joined'; peer: PeerInfo }
-    | { type: 'peer-left'; id: string }
-    | { type: 'offer-transfer'; from: string; files: FileMeta[] }
-    | { type: 'accept'; from: string }
-    | { type: 'decline'; from: string }
-    | { type: 'rtc-offer'; from: string; sdp: RTCSessionDescriptionInit }
-    | { type: 'rtc-answer'; from: string; sdp: RTCSessionDescriptionInit }
-    | { type: 'ice-candidate'; from: string; candidate: RTCIceCandidateInit | null }
-    | { type: 'error'; message: string };
 
 const clients = new Map<string, Client>();
 
