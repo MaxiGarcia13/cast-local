@@ -1,14 +1,15 @@
 import type { useSignaling } from './use-signaling';
+import { navigate } from 'astro:transitions/client';
 import { onMounted, onUnmounted } from 'vue';
-import {
-  setGuestSharePayload,
-  sharePayloadStore,
-} from '@/stores/share-payload';
+import { hasSharePayload } from '@/stores/share-payload';
+
+export type RoomRole = 'host' | 'guest';
 
 type Signaling = ReturnType<typeof useSignaling>;
 
 interface UseRoomSessionOptions {
   roomId: string;
+  role: RoomRole;
   roomIsValid: () => boolean;
   signaling: Signaling;
   onLeaveCleanup?: () => void;
@@ -24,8 +25,9 @@ export function useRoomSession(options: UseRoomSessionOptions) {
       return;
     }
 
-    if (!sharePayloadStore.get().isHost) {
-      setGuestSharePayload();
+    if (options.role === 'host' && !hasSharePayload.get()) {
+      navigate('/', { history: 'replace' });
+      return;
     }
 
     options.signaling.connect({ roomId: options.roomId });

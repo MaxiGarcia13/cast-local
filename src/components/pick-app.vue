@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import { navigate } from 'astro:transitions/client';
 import { computed, ref } from 'vue';
 import FilePicker from '@/components/file-picker.vue';
 import BrandIcon from '@/components/icons/brand.vue';
 import CubeSendIcon from '@/components/icons/cube-send.vue';
 import TextComposer from '@/components/text-composer.vue';
-import { setHostSharePayload } from '@/stores/share-payload';
-import { createRoomId } from '@/utils/room-id';
+import { setSharePayload } from '@/stores/share-payload';
+import { createRoomId, roomHostPath } from '@/utils/room-id';
 
 const files = ref<File[]>([]);
 const text = ref('');
@@ -19,9 +20,8 @@ function startShare() {
     return;
   }
 
-  setHostSharePayload(files.value, text.value);
-  const roomId = createRoomId();
-  window.location.assign(`/room/${roomId}`);
+  setSharePayload(files.value, text.value);
+  navigate(roomHostPath(createRoomId()));
 }
 </script>
 

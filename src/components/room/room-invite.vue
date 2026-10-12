@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import QRCode from 'qrcode';
 import { computed, onMounted, ref, watch } from 'vue';
+import { roomJoinPath } from '@/utils/room-id';
 
 const props = defineProps<{
   roomId: string;
@@ -10,10 +11,11 @@ const qrDataUrl = ref<string | null>(null);
 const copyState = ref<'idle' | 'copied' | 'failed'>('idle');
 
 const roomUrl = computed(() => {
+  const path = roomJoinPath(props.roomId);
   if (typeof window === 'undefined') {
-    return `/room/${props.roomId}`;
+    return path;
   }
-  return `${window.location.origin}/room/${props.roomId}`;
+  return `${window.location.origin}${path}`;
 });
 
 async function renderQr(url: string) {

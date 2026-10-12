@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import type { PeerInfo } from '@/domain/p2p';
 import { useStore } from '@nanostores/vue';
+import { navigate } from 'astro:transitions/client';
 import { computed, ref, watch } from 'vue';
-import IncomingOffer from '@/components/room/incoming-offer.vue';
-import RoomGuestPanel from '@/components/room/room-guest-panel.vue';
-import RoomHeader from '@/components/room/room-header.vue';
-import RoomHostPanel from '@/components/room/room-host-panel.vue';
-import RoomInvalid from '@/components/room/room-invalid.vue';
-import RoomInvite from '@/components/room/room-invite.vue';
-import RoomToolbar from '@/components/room/room-toolbar.vue';
-import RoomTransferPanel from '@/components/room/room-transfer-panel.vue';
+import {
+  IncomingOffer,
+  RoomGuestPanel,
+  RoomHeader,
+  RoomHostPanel,
+  RoomInvalid,
+  RoomInvite,
+  RoomToolbar,
+  RoomTransferPanel,
+} from '@/components/room';
 import { useCastTransfer } from '@/composables/use-cast-transfer';
 import { useRoomSession } from '@/composables/use-room-session';
 import { useScrollIntoView } from '@/composables/use-scroll-into-view';
@@ -23,9 +26,12 @@ import { guessDeviceName } from '@/utils/device-name';
 import { formatReadySummary } from '@/utils/ready-summary';
 import { isValidRoomId } from '@/utils/room-id';
 
-const props = defineProps<{
+interface Props {
   roomId: string;
-}>();
+  roomRole: 'host' | 'guest';
+}
+
+const props = defineProps<Props>();
 
 const payload = useStore(sharePayloadStore);
 const hasPayload = useStore(hasSharePayload);
@@ -37,7 +43,7 @@ const transferPanel = ref<HTMLElement | null>(null);
 watch(
   payload,
   (nextPayload) => {
-    files.value = nextPayload.files;
+    files.value = [...nextPayload.files] as File[];
     text.value = nextPayload.text;
   },
   { immediate: true, deep: true },
@@ -66,7 +72,7 @@ const {
 } = useCastTransfer(signaling, files, text);
 
 const roomIsValid = computed(() => isValidRoomId(props.roomId));
-const isHost = computed(() => payload.value.isHost);
+const isHost = computed(() => props.roomRole === 'host');
 const selfName = computed(() => self.value?.name ?? guessDeviceName());
 const radarDisabled = computed(() => !hasPayload.value || isBusy.value);
 
@@ -91,6 +97,7 @@ const readySummary = computed(() => formatReadySummary({
 
 useRoomSession({
   roomId: props.roomId,
+  role: props.roomRole,
   roomIsValid: () => roomIsValid.value,
   signaling,
   onLeaveCleanup: resetTransferState,
@@ -110,7 +117,7 @@ function leaveRoom() {
   resetTransferState();
   disconnect();
   clearSharePayload();
-  window.location.assign('/');
+  navigate('/');
 }
 
 function onSelectPeer(peer: PeerInfo) {
@@ -159,7 +166,10 @@ function onSelectPeer(peer: PeerInfo) {
         />
       </div>
 
-      <RoomInvite :room-id="roomId" />
+      <RoomInvite
+        v-if="isHost"
+        :room-id="roomId"
+      />
     </main>
 
     <IncomingOffer

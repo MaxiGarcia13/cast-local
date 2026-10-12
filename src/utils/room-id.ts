@@ -16,3 +16,11 @@ export function createRoomId(length = ROOM_ID_LENGTH): string {
 export function isValidRoomId(roomId: string): boolean {
   return /^[a-z0-9]{6,12}$/.test(roomId.trim());
 }
+
+export function roomHostPath(roomId: string): string {
+  return `/room/${roomId}`;
+}
+
+export function roomJoinPath(roomId: string): string {
+  return `/room/${roomId}/join`;
+}
