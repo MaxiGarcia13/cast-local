@@ -32,11 +32,11 @@ Host browser ──WebSocket──► Signaling server (rooms, offers, SDP/ICE)
               (chunks + text)
 ```
 
-| Piece | Role |
-| --- | --- |
-| Astro + Vue UI | Pick payload, host/join rooms, show transfer progress |
+| Piece                                | Role                                                       |
+| ------------------------------------ | ---------------------------------------------------------- |
+| Astro + Vue UI                       | Pick payload, host/join rooms, show transfer progress      |
 | Signaling server (`ws`, port `3001`) | Rooms, peer presence, transfer offers, RTC signaling relay |
-| WebRTC data channels | Actual file/text transfer between browsers |
+| WebRTC data channels                 | Actual file/text transfer between browsers                 |
 
 ## Requirements
 
@@ -70,18 +70,18 @@ pnpm start
 
 ### Useful scripts
 
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Web + signaling together (development) |
-| `pnpm dev:web` | Astro only |
-| `pnpm dev:server` | Signaling only |
-| `pnpm build` | Production build |
-| `pnpm start` | Built web + signaling (production) |
-| `pnpm start:web` | Built web only |
-| `pnpm start:server` | Signaling only (same as `dev:server`) |
-| `pnpm preview` | Astro preview of the build (no signaling) |
-| `pnpm lint` | ESLint |
-| `pnpm lint:fix` | ESLint with autofix |
+| Command             | Description                               |
+| ------------------- | ----------------------------------------- |
+| `pnpm dev`          | Web + signaling together (development)    |
+| `pnpm dev:web`      | Astro only                                |
+| `pnpm dev:server`   | Signaling only                            |
+| `pnpm build`        | Production build                          |
+| `pnpm start`        | Built web + signaling (production)        |
+| `pnpm start:web`    | Built web only                            |
+| `pnpm start:server` | Signaling only (same as `dev:server`)     |
+| `pnpm preview`      | Astro preview of the build (no signaling) |
+| `pnpm lint`         | ESLint                                    |
+| `pnpm lint:fix`     | ESLint with autofix                       |
 
 Override the web port with `PORT` (Astro default `4321`) and signaling with `SIGNALING_PORT` (default `3001`).
 
