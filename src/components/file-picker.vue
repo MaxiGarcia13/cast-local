@@ -1,16 +1,31 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import UploadIcon from '@/components/icons/upload.vue';
 import { formatBytes } from '@/utils/format-bytes';
+import { snapshotFiles } from '@/utils/snapshot-file';
 
 const files = defineModel<File[]>({ default: () => [] });
+const isLoading = ref(false);
 
-function onFileInput(event: Event) {
-  const input = event.target as HTMLInputElement;
-  const selected = input.files ? [...input.files] : [];
+async function addFiles(selected: File[]) {
   if (selected.length === 0) {
     return;
   }
-  files.value = [...files.value, ...selected];
+
+  isLoading.value = true;
+  try {
+    const snapshots = await snapshotFiles(selected);
+    files.value = [...files.value, ...snapshots];
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+async function onFileInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const selected = input.files ? [...input.files] : [];
+  // Snapshot before clearing the input so Chromium keeps the bytes readable.
+  await addFiles(selected);
   input.value = '';
 }
 
@@ -18,13 +33,13 @@ function removeFile(index: number) {
   files.value = files.value.filter((_, fileIndex) => fileIndex !== index);
 }
 
-function onDrop(event: DragEvent) {
+async function onDrop(event: DragEvent) {
   event.preventDefault();
   const dropped = event.dataTransfer?.files;
   if (!dropped?.length) {
     return;
   }
-  files.value = [...files.value, ...dropped];
+  await addFiles([...dropped]);
 }
 </script>
 
@@ -32,12 +47,13 @@ function onDrop(event: DragEvent) {
   <div class="flex w-full max-w-lg flex-col gap-4">
     <label
       class="flex cursor-pointer flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-cast-mist/40 bg-cast-panel/40 px-6 py-12 text-center transition hover:border-cast-signal/60 hover:bg-cast-panel/70"
+      :class="{ 'pointer-events-none opacity-60': isLoading }"
       @dragover.prevent
       @drop="onDrop"
     >
       <UploadIcon class="size-8 text-cast-mist" />
       <span class="font-display text-xl font-semibold text-cast-fog">
-        Choose files
+        {{ isLoading ? 'Preparing files…' : 'Choose files' }}
       </span>
       <span class="text-sm text-cast-mist">
         Drop them here or click to browse
@@ -46,6 +62,7 @@ function onDrop(event: DragEvent) {
         type="file"
         class="sr-only"
         multiple
+        :disabled="isLoading"
         @change="onFileInput"
       >
     </label>
@@ -56,7 +73,7 @@ function onDrop(event: DragEvent) {
     >
       <li
         v-for="(file, index) in files"
-        :key="`${file.name}-${file.size}-${index}`"
+        :key="`${file.name}-${file.size}-${file.lastModified}-${index}`"
         class="flex items-center justify-between gap-4 rounded-xl bg-cast-panel/60 px-4 py-2"
       >
         <div class="min-w-0">

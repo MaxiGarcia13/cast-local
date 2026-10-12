@@ -11,10 +11,16 @@ type Signaling = ReturnType<typeof useSignaling>;
 export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
   const remotePeerId = ref<string | null>(null);
   const role = ref<'idle' | 'sender' | 'receiver'>('idle');
+  const pendingFiles = ref<File[]>([]);
   const pendingFileMetas = ref(fileToMetaList([]));
   const waitingForAccept = ref(false);
 
   const fileTransfer = useFileTransfer();
+
+  const isBusy = computed(() => {
+    const phase = fileTransfer.progress.value.phase;
+    return waitingForAccept.value || phase === 'sending' || phase === 'receiving';
+  });
 
   const peerConnection = usePeerConnection({
     onIceCandidate: (candidate) => {
@@ -32,6 +38,18 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
         void sendWhenReady(channel);
       }
     },
+    onConnectionStateChange: (state) => {
+      if (state === 'failed') {
+        waitingForAccept.value = false;
+        fileTransfer.setError('ICE failed', 'Could not reach the other device on this network.');
+      }
+      if (state === 'disconnected') {
+        const phase = fileTransfer.progress.value.phase;
+        if (phase === 'sending' || phase === 'receiving') {
+          fileTransfer.setError('Connection lost during transfer.');
+        }
+      }
+    },
   });
 
   const incomingPeerName = computed(() => {
@@ -44,9 +62,9 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
 
   async function sendWhenReady(channel: RTCDataChannel) {
     try {
-      await fileTransfer.sendFiles(channel, files.value, pendingFileMetas.value);
+      await fileTransfer.sendFiles(channel, pendingFiles.value, pendingFileMetas.value);
     } catch (error) {
-      fileTransfer.setError(error instanceof Error ? error.message : 'Send failed');
+      fileTransfer.setError(error, 'Send failed');
     }
   }
 
@@ -58,21 +76,33 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
     waitingForAccept.value = false;
     role.value = 'idle';
     remotePeerId.value = null;
+    pendingFiles.value = [];
     pendingFileMetas.value = [];
     peerConnection.close();
     fileTransfer.stopReceiver();
     fileTransfer.resetProgress();
   }
 
+  function dismissProgress() {
+    if (
+      fileTransfer.progress.value.phase === 'complete'
+      || fileTransfer.progress.value.phase === 'error'
+    ) {
+      resetTransferState();
+    }
+  }
+
   function requestTransfer(peer: PeerInfo) {
-    if (files.value.length === 0) {
+    if (files.value.length === 0 || isBusy.value) {
       return;
     }
 
     resetTransferState();
     role.value = 'sender';
     remotePeerId.value = peer.id;
-    pendingFileMetas.value = fileToMetaList(files.value);
+    // Keep a dedicated send snapshot so later transfers don't re-touch picker Files.
+    pendingFiles.value = [...files.value];
+    pendingFileMetas.value = fileToMetaList(pendingFiles.value);
     waitingForAccept.value = true;
     signaling.offerTransfer(peer.id, pendingFileMetas.value);
   }
@@ -113,7 +143,7 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
         const offer = await peerConnection.createAsOfferer();
         signaling.sendRtcOffer(from, offer);
       } catch (error) {
-        fileTransfer.setError(error instanceof Error ? error.message : 'Failed to create offer');
+        fileTransfer.setError(error, 'Failed to create offer');
       }
     },
   );
@@ -144,7 +174,7 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
         const answer = await peerConnection.createAsAnswerer(message.sdp);
         signaling.sendRtcAnswer(message.from, answer);
       } catch (error) {
-        fileTransfer.setError(error instanceof Error ? error.message : 'Failed to create answer');
+        fileTransfer.setError(error, 'Failed to create answer');
       }
     },
   );
@@ -161,7 +191,7 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
       try {
         await peerConnection.applyAnswer(message.sdp);
       } catch (error) {
-        fileTransfer.setError(error instanceof Error ? error.message : 'Failed to apply answer');
+        fileTransfer.setError(error, 'Failed to apply answer');
       }
     },
   );
@@ -177,7 +207,7 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
         try {
           await peerConnection.addIceCandidate(message.candidate);
         } catch (error) {
-          fileTransfer.setError(error instanceof Error ? error.message : 'ICE failed');
+          fileTransfer.setError(error, 'ICE failed');
         }
       }
     },
@@ -188,9 +218,11 @@ export function useCastTransfer(signaling: Signaling, files: Ref<File[]>) {
     incomingOffer: signaling.incomingOffer,
     incomingPeerName,
     waitingForAccept,
+    isBusy,
     requestTransfer,
     acceptIncoming,
     declineIncoming,
     resetTransferState,
+    dismissProgress,
   };
 }

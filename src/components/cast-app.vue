@@ -31,10 +31,12 @@ const {
   incomingOffer,
   incomingPeerName,
   waitingForAccept,
+  isBusy,
   requestTransfer,
   acceptIncoming,
   declineIncoming,
   resetTransferState,
+  dismissProgress,
 } = useCastTransfer(signaling, files);
 
 const canShare = computed(() => files.value.length > 0);
@@ -128,6 +130,7 @@ function onSelectPeer(peer: PeerInfo) {
           <ShareRadar
             :peers="peers"
             :self-name="selfName"
+            :disabled="isBusy"
             @select="onSelectPeer"
           />
 
@@ -138,13 +141,17 @@ function onSelectPeer(peer: PeerInfo) {
             Waiting for accept…
           </p>
 
-          <TransferProgress :progress="progress" />
+          <TransferProgress
+            :progress="progress"
+            @dismiss="dismissProgress"
+          />
         </div>
       </template>
 
       <TransferProgress
         v-if="phase === 'pick' && progress.phase !== 'idle'"
         :progress="progress"
+        @dismiss="dismissProgress"
       />
     </main>
 

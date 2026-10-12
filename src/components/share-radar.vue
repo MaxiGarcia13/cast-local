@@ -2,10 +2,13 @@
 import type { PeerInfo } from '@/domain/p2p';
 import PeerDot from '@/components/peer-dot.vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   peers: PeerInfo[];
   selfName: string;
-}>();
+  disabled?: boolean;
+}>(), {
+  disabled: false,
+});
 
 defineEmits<{
   select: [peer: PeerInfo];
@@ -34,6 +37,14 @@ function peerAngle(index: number): number {
       style="animation: cast-pulse-ring 3s ease-out 1.2s infinite"
     />
 
+    <div
+      class="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] origin-center rounded-full"
+      style="
+        background: conic-gradient(from 0deg, transparent 0deg, rgb(255 122 26 / 0.18) 40deg, transparent 80deg);
+        animation: cast-sweep 4s linear infinite;
+      "
+    />
+
     <div class="absolute inset-0">
       <PeerDot
         v-for="(peer, index) in peers"
@@ -41,12 +52,17 @@ function peerAngle(index: number): number {
         :peer="peer"
         :angle="peerAngle(index)"
         :radius="132"
+        :disabled="disabled"
+        :pulse-delay="`${index * 0.2}s`"
         @select="$emit('select', $event)"
       />
     </div>
 
     <div class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2">
-      <span class="size-16 rounded-full bg-cast-coral shadow-[0_0_28px_rgb(255_154_60_/_0.4)]" />
+      <span
+        class="size-16 rounded-full bg-cast-coral"
+        style="animation: cast-breathe 2.4s ease-in-out infinite"
+      />
       <span class="text-sm font-semibold text-cast-fog">
         {{ selfName }}
       </span>

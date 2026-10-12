@@ -8,6 +8,7 @@ import {
   readChunk,
 } from '@/domain/p2p';
 import { downloadBlob } from '@/utils/download-blob';
+import { friendlyTransferError } from '@/utils/transfer-errors';
 
 export type TransferPhase
   = | 'idle'
@@ -20,7 +21,10 @@ export interface TransferProgress {
   phase: TransferPhase;
   bytesDone: number;
   bytesTotal: number;
+  filesDone: number;
+  filesTotal: number;
   currentFileName: string | null;
+  completedFiles: string[];
   error: string | null;
 }
 
@@ -65,32 +69,34 @@ function waitForBuffer(channel: RTCDataChannel): Promise<void> {
   });
 }
 
-export function useFileTransfer() {
-  const progress = ref<TransferProgress>({
+function createIdleProgress(): TransferProgress {
+  return {
     phase: 'idle',
     bytesDone: 0,
     bytesTotal: 0,
+    filesDone: 0,
+    filesTotal: 0,
     currentFileName: null,
+    completedFiles: [],
     error: null,
-  });
+  };
+}
+
+export function useFileTransfer() {
+  const progress = ref<TransferProgress>(createIdleProgress());
 
   let receiverCleanup: (() => void) | null = null;
 
   function resetProgress() {
-    progress.value = {
-      phase: 'idle',
-      bytesDone: 0,
-      bytesTotal: 0,
-      currentFileName: null,
-      error: null,
-    };
+    progress.value = createIdleProgress();
   }
 
-  function setError(message: string) {
+  function setError(error: unknown, fallback = 'Transfer failed') {
     progress.value = {
       ...progress.value,
       phase: 'error',
-      error: message,
+      error: friendlyTransferError(error, fallback),
+      currentFileName: null,
     };
   }
 
@@ -102,11 +108,16 @@ export function useFileTransfer() {
     await waitForChannelOpen(channel);
 
     const bytesTotal = fileMetas.reduce((sum, file) => sum + file.size, 0);
+    const completedFiles: string[] = [];
+
     progress.value = {
       phase: 'sending',
       bytesDone: 0,
       bytesTotal,
+      filesDone: 0,
+      filesTotal: fileMetas.length,
       currentFileName: fileMetas[0]?.name ?? null,
+      completedFiles: [],
       error: null,
     };
 
@@ -128,6 +139,9 @@ export function useFileTransfer() {
       const total = chunkCount(file.size);
       for (let index = 0; index < total; index++) {
         await waitForBuffer(channel);
+        if (channel.readyState !== 'open') {
+          throw new Error('Data channel closed during send');
+        }
         const payload = await readChunk(file, index);
         channel.send(encodeChunk(meta.id, index, total, payload));
         progress.value = {
@@ -138,6 +152,13 @@ export function useFileTransfer() {
           ),
         };
       }
+
+      completedFiles.push(meta.name);
+      progress.value = {
+        ...progress.value,
+        filesDone: completedFiles.length,
+        completedFiles: [...completedFiles],
+      };
 
       const fileComplete: DataChannelControl = { type: 'file-complete', fileId: meta.id };
       channel.send(JSON.stringify(fileComplete));
@@ -150,7 +171,9 @@ export function useFileTransfer() {
       ...progress.value,
       phase: 'complete',
       bytesDone: bytesTotal,
+      filesDone: fileMetas.length,
       currentFileName: null,
+      completedFiles: [...completedFiles],
     };
   }
 
@@ -159,6 +182,7 @@ export function useFileTransfer() {
 
     const filesById = new Map<string, FileMeta>();
     const chunksByFileId = new Map<string, Map<number, Uint8Array>>();
+    const completedFiles: string[] = [];
     let bytesTotal = 0;
     let bytesDone = 0;
 
@@ -166,32 +190,39 @@ export function useFileTransfer() {
       phase: 'receiving',
       bytesDone: 0,
       bytesTotal: 0,
+      filesDone: 0,
+      filesTotal: 0,
       currentFileName: null,
+      completedFiles: [],
       error: null,
     };
 
     const onMessage = (event: MessageEvent) => {
-      if (typeof event.data === 'string') {
-        handleControlMessage(JSON.parse(event.data) as DataChannelControl);
-        return;
-      }
+      try {
+        if (typeof event.data === 'string') {
+          handleControlMessage(JSON.parse(event.data) as DataChannelControl);
+          return;
+        }
 
-      const chunk = decodeChunk(event.data as ArrayBuffer);
-      let fileChunks = chunksByFileId.get(chunk.fileId);
-      if (!fileChunks) {
-        fileChunks = new Map();
-        chunksByFileId.set(chunk.fileId, fileChunks);
-      }
-      fileChunks.set(chunk.index, chunk.payload);
+        const chunk = decodeChunk(event.data as ArrayBuffer);
+        let fileChunks = chunksByFileId.get(chunk.fileId);
+        if (!fileChunks) {
+          fileChunks = new Map();
+          chunksByFileId.set(chunk.fileId, fileChunks);
+        }
+        fileChunks.set(chunk.index, chunk.payload);
 
-      bytesDone += chunk.payload.byteLength;
-      const meta = filesById.get(chunk.fileId);
-      progress.value = {
-        ...progress.value,
-        bytesDone: Math.min(bytesDone, bytesTotal || bytesDone),
-        bytesTotal: bytesTotal || progress.value.bytesTotal,
-        currentFileName: meta?.name ?? progress.value.currentFileName,
-      };
+        bytesDone += chunk.payload.byteLength;
+        const meta = filesById.get(chunk.fileId);
+        progress.value = {
+          ...progress.value,
+          bytesDone: Math.min(bytesDone, bytesTotal || bytesDone),
+          bytesTotal: bytesTotal || progress.value.bytesTotal,
+          currentFileName: meta?.name ?? progress.value.currentFileName,
+        };
+      } catch (error) {
+        setError(error, 'Could not process an incoming file chunk');
+      }
     };
 
     function handleControlMessage(message: DataChannelControl) {
@@ -204,7 +235,10 @@ export function useFileTransfer() {
           phase: 'receiving',
           bytesDone: 0,
           bytesTotal,
+          filesDone: 0,
+          filesTotal: message.files.length,
           currentFileName: message.files[0]?.name ?? null,
+          completedFiles: [],
           error: null,
         };
         return;
@@ -222,6 +256,13 @@ export function useFileTransfer() {
         const blob = assembleFile(fileChunks, total, meta.type);
         downloadBlob(blob, meta.name);
         chunksByFileId.delete(message.fileId);
+        completedFiles.push(meta.name);
+
+        progress.value = {
+          ...progress.value,
+          filesDone: completedFiles.length,
+          completedFiles: [...completedFiles],
+        };
         return;
       }
 
@@ -230,7 +271,9 @@ export function useFileTransfer() {
           ...progress.value,
           phase: 'complete',
           bytesDone: bytesTotal || bytesDone,
+          filesDone: completedFiles.length,
           currentFileName: null,
+          completedFiles: [...completedFiles],
         };
         return;
       }
@@ -240,9 +283,15 @@ export function useFileTransfer() {
       }
     }
 
+    const onChannelError = () => {
+      setError('Data channel failed during transfer');
+    };
+
     channel.addEventListener('message', onMessage);
+    channel.addEventListener('error', onChannelError);
     receiverCleanup = () => {
       channel.removeEventListener('message', onMessage);
+      channel.removeEventListener('error', onChannelError);
       receiverCleanup = null;
     };
   }
