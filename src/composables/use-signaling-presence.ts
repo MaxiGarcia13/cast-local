@@ -4,10 +4,12 @@ import { ref } from 'vue';
 export function useSignalingPresence() {
   const peers = ref<PeerInfo[]>([]);
   const self = ref<PeerInfo | null>(null);
+  const roomClosed = ref(false);
 
   function reset() {
     peers.value = [];
     self.value = null;
+    roomClosed.value = false;
   }
 
   function handleMessage(message: ServerMessage): boolean {
@@ -26,6 +28,9 @@ export function useSignalingPresence() {
       case 'peer-left':
         peers.value = peers.value.filter((peer) => peer.id !== message.id);
         return true;
+      case 'room-closed':
+        roomClosed.value = true;
+        return true;
       default:
         return false;
     }
@@ -34,6 +39,7 @@ export function useSignalingPresence() {
   return {
     peers,
     self,
+    roomClosed,
     reset,
     handleMessage,
   };

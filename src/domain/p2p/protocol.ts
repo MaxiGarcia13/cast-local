@@ -28,7 +28,7 @@ export interface IceCandidate {
 }
 
 export type ClientMessage
-  = | { type: 'join-room'; roomId: string; name: string; device?: string }
+  = | { type: 'join-room'; roomId: string; name: string; device?: string; asHost?: boolean }
     | { type: 'offer-transfer'; to: string; files: FileMeta[]; textPreview?: string | null }
     | { type: 'accept'; to: string }
     | { type: 'decline'; to: string }
@@ -41,6 +41,7 @@ export type ServerMessage
     | { type: 'peers'; peers: PeerInfo[] }
     | { type: 'peer-joined'; peer: PeerInfo }
     | { type: 'peer-left'; id: string }
+    | { type: 'room-closed' }
     | { type: 'offer-transfer'; from: string; files: FileMeta[]; textPreview?: string | null }
     | { type: 'accept'; from: string }
     | { type: 'decline'; from: string }

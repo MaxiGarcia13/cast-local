@@ -11,6 +11,7 @@ interface UseSignalingSocketOptions {
 
 export interface ConnectOptions {
   roomId: string;
+  asHost?: boolean;
   name?: string;
   device?: string;
 }
@@ -57,7 +58,13 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
         return;
       }
       status.value = 'connected';
-      send({ type: 'join-room', roomId, name, device });
+      send({
+        type: 'join-room',
+        roomId,
+        name,
+        device,
+        asHost: Boolean(connectOptions.asHost),
+      });
     });
 
     nextSocket.addEventListener('message', (event) => {

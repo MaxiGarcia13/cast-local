@@ -8,7 +8,7 @@ import {
   relay,
   send,
 } from './peer-registry';
-import { joinRoom } from './room-registry';
+import { joinRoomAsGuest, joinRoomAsHost } from './room-registry';
 
 export function handleClientMessage(
   ws: WebSocket,
@@ -39,9 +39,21 @@ export function handleClientMessage(
     const device = message.device?.trim() || 'unknown';
     const joinedPeerId = crypto.randomUUID();
     const peer: PeerInfo = { id: joinedPeerId, name, device };
+    const asHost = Boolean(message.asHost);
+
+    try {
+      if (asHost) {
+        joinRoomAsHost(roomId, joinedPeerId);
+      } else {
+        joinRoomAsGuest(roomId, joinedPeerId);
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unable to join room';
+      send(ws, { type: 'error', message: errorMessage });
+      return peerId;
+    }
 
     registerPeer(ws, peer);
-    joinRoom(roomId, joinedPeerId);
 
     send(ws, { type: 'welcome', peer, roomId });
     send(ws, { type: 'peers', peers: listPeersInRoom(roomId, joinedPeerId) });

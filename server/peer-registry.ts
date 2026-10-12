@@ -2,6 +2,9 @@ import type { WebSocket } from 'ws';
 import type { PeerInfo, ServerMessage } from '@/domain/p2p';
 import {
   areInSameRoom,
+  dissolveRoom,
+  getPeerRoom,
+  isRoomHost,
   leaveRoom,
   listRoomPeerIds,
 } from './room-registry';
@@ -13,7 +16,7 @@ interface Client {
 
 type RelayMessage = Exclude<
   ServerMessage,
-  { type: 'welcome' | 'peers' | 'peer-joined' | 'peer-left' | 'error' }
+  { type: 'welcome' | 'peers' | 'peer-joined' | 'peer-left' | 'room-closed' | 'error' }
 >;
 
 const clients = new Map<string, Client>();
@@ -67,13 +70,42 @@ export function relay(fromId: string, toId: string, message: RelayMessage) {
   send(target.ws, message);
 }
 
+function removeClient(peerId: string) {
+  const client = clients.get(peerId);
+  clients.delete(peerId);
+  return client;
+}
+
+/** Host left: notify guests, drop everyone from the room. */
+function closeRoomFromHost(hostId: string) {
+  const roomId = getPeerRoom(hostId);
+  if (!roomId) {
+    removeClient(hostId);
+    return;
+  }
+
+  const guestIds = listRoomPeerIds(roomId, hostId);
+  broadcastToRoom(roomId, { type: 'room-closed' }, hostId);
+  dissolveRoom(roomId);
+  removeClient(hostId);
+
+  for (const peerId of guestIds) {
+    removeClient(peerId);
+  }
+}
+
 export function removePeer(peerId: string) {
   if (!clients.has(peerId)) {
     return;
   }
 
+  if (isRoomHost(peerId)) {
+    closeRoomFromHost(peerId);
+    return;
+  }
+
   const roomId = leaveRoom(peerId);
-  clients.delete(peerId);
+  removeClient(peerId);
 
   if (roomId) {
     broadcastToRoom(roomId, { type: 'peer-left', id: peerId });

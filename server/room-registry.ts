@@ -1,21 +1,46 @@
-const rooms = new Map<string, Set<string>>();
+interface RoomState {
+  members: Set<string>;
+  hostId: string;
+}
+
+const rooms = new Map<string, RoomState>();
 const peerRoom = new Map<string, string>();
 
-export function joinRoom(roomId: string, peerId: string) {
+export function joinRoomAsHost(roomId: string, peerId: string): string {
   const normalizedRoomId = roomId.trim();
   if (!normalizedRoomId) {
     throw new Error('Room id is required');
   }
 
-  leaveRoom(peerId);
-
-  let members = rooms.get(normalizedRoomId);
-  if (!members) {
-    members = new Set();
-    rooms.set(normalizedRoomId, members);
+  const existing = rooms.get(normalizedRoomId);
+  if (existing) {
+    throw new Error('Room already has a host');
   }
 
-  members.add(peerId);
+  leaveRoom(peerId);
+
+  rooms.set(normalizedRoomId, {
+    members: new Set([peerId]),
+    hostId: peerId,
+  });
+  peerRoom.set(peerId, normalizedRoomId);
+  return normalizedRoomId;
+}
+
+export function joinRoomAsGuest(roomId: string, peerId: string): string {
+  const normalizedRoomId = roomId.trim();
+  if (!normalizedRoomId) {
+    throw new Error('Room id is required');
+  }
+
+  const room = rooms.get(normalizedRoomId);
+  if (!room) {
+    throw new Error('Room is not open');
+  }
+
+  leaveRoom(peerId);
+
+  room.members.add(peerId);
   peerRoom.set(peerId, normalizedRoomId);
   return normalizedRoomId;
 }
@@ -27,13 +52,13 @@ export function leaveRoom(peerId: string): string | null {
   }
 
   peerRoom.delete(peerId);
-  const members = rooms.get(roomId);
-  if (!members) {
+  const room = rooms.get(roomId);
+  if (!room) {
     return roomId;
   }
 
-  members.delete(peerId);
-  if (members.size === 0) {
+  room.members.delete(peerId);
+  if (room.members.size === 0) {
     rooms.delete(roomId);
   }
 
@@ -44,13 +69,40 @@ export function getPeerRoom(peerId: string): string | null {
   return peerRoom.get(peerId) ?? null;
 }
 
-export function listRoomPeerIds(roomId: string, excludeId?: string): string[] {
-  const members = rooms.get(roomId);
-  if (!members) {
+export function getRoomHostId(roomId: string): string | null {
+  return rooms.get(roomId)?.hostId ?? null;
+}
+
+export function isRoomHost(peerId: string): boolean {
+  const roomId = peerRoom.get(peerId);
+  if (!roomId) {
+    return false;
+  }
+  return rooms.get(roomId)?.hostId === peerId;
+}
+
+/** Removes every member from the room map. Returns peer ids that were in the room. */
+export function dissolveRoom(roomId: string): string[] {
+  const room = rooms.get(roomId);
+  if (!room) {
     return [];
   }
 
-  return [...members].filter((id) => id !== excludeId);
+  const memberIds = [...room.members];
+  for (const peerId of memberIds) {
+    peerRoom.delete(peerId);
+  }
+  rooms.delete(roomId);
+  return memberIds;
+}
+
+export function listRoomPeerIds(roomId: string, excludeId?: string): string[] {
+  const room = rooms.get(roomId);
+  if (!room) {
+    return [];
+  }
+
+  return [...room.members].filter((id) => id !== excludeId);
 }
 
 export function areInSameRoom(peerA: string, peerB: string): boolean {

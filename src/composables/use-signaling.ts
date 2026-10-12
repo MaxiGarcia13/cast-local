@@ -46,6 +46,7 @@ export function useSignaling() {
   return {
     peers: presence.peers,
     self: presence.self,
+    roomClosed: presence.roomClosed,
     status: socket.status,
     lastError: socket.lastError,
     incomingOffer: transfer.incomingOffer,
