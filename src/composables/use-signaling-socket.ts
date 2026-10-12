@@ -1,0 +1,98 @@
+import type { SignalingStatus } from './signaling-types';
+import type { ClientMessage, ServerMessage } from '@/domain/p2p';
+import { ref } from 'vue';
+import { defaultSignalingUrl } from '@/domain/p2p';
+import { guessDeviceName, guessDeviceType } from '@/utils/device-name';
+
+interface UseSignalingSocketOptions {
+  onMessage: (message: ServerMessage) => void;
+  onDisconnected: () => void;
+}
+
+export function useSignalingSocket(options: UseSignalingSocketOptions) {
+  const status = ref<SignalingStatus>('idle');
+  const lastError = ref<string | null>(null);
+
+  let socket: WebSocket | null = null;
+
+  function send(message: ClientMessage) {
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
+      lastError.value = 'Not connected to signaling server';
+      return;
+    }
+    socket.send(JSON.stringify(message));
+  }
+
+  function connect(name = guessDeviceName(), device = guessDeviceType()) {
+    if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
+      return;
+    }
+
+    lastError.value = null;
+    status.value = 'connecting';
+
+    const nextSocket = new WebSocket(defaultSignalingUrl());
+    socket = nextSocket;
+
+    nextSocket.addEventListener('open', () => {
+      if (socket !== nextSocket) {
+        return;
+      }
+      status.value = 'connected';
+      send({ type: 'join', name, device });
+    });
+
+    nextSocket.addEventListener('message', (event) => {
+      if (socket !== nextSocket) {
+        return;
+      }
+      try {
+        options.onMessage(JSON.parse(String(event.data)) as ServerMessage);
+      } catch {
+        lastError.value = 'Invalid message from signaling server';
+      }
+    });
+
+    nextSocket.addEventListener('close', () => {
+      if (socket !== nextSocket) {
+        return;
+      }
+      socket = null;
+      options.onDisconnected();
+      if (status.value !== 'error') {
+        status.value = 'idle';
+      }
+    });
+
+    nextSocket.addEventListener('error', () => {
+      if (socket !== nextSocket) {
+        return;
+      }
+      lastError.value = 'Failed to connect to signaling server';
+      status.value = 'error';
+    });
+  }
+
+  function disconnect() {
+    const activeSocket = socket;
+    socket = null;
+    status.value = 'idle';
+    lastError.value = null;
+    options.onDisconnected();
+    activeSocket?.close();
+  }
+
+  function setError(message: string) {
+    lastError.value = message;
+    status.value = 'error';
+  }
+
+  return {
+    status,
+    lastError,
+    send,
+    connect,
+    disconnect,
+    setError,
+  };
+}

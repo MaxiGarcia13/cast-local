@@ -1,29 +1,46 @@
 <script setup lang="ts">
 import type { PeerInfo } from '@/domain/p2p';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import FilePicker from '@/components/file-picker.vue';
 import BrandIcon from '@/components/icons/brand.vue';
 import ChevronLeftIcon from '@/components/icons/chevron-left.vue';
 import CubeSendIcon from '@/components/icons/cube-send.vue';
 import ShareRadar from '@/components/share-radar.vue';
+import { useSignaling } from '@/composables/use-signaling';
+import { guessDeviceName } from '@/utils/device-name';
 
 type Phase = 'pick' | 'radar';
 
 const phase = ref<Phase>('pick');
 const files = ref<File[]>([]);
-const peers = ref<PeerInfo[]>([]);
-const selfName = ref(guessDeviceName());
 const selectedPeer = ref<PeerInfo | null>(null);
 
-const canShare = computed(() => files.value.length > 0);
+const {
+  peers,
+  self,
+  status,
+  lastError,
+  connect,
+} = useSignaling();
 
-function guessDeviceName(): string {
-  if (typeof navigator === 'undefined') {
-    return 'This device';
+const canShare = computed(() => files.value.length > 0);
+const selfName = computed(() => self.value?.name ?? guessDeviceName());
+const statusLabel = computed(() => {
+  switch (status.value) {
+    case 'connecting':
+      return 'Connecting…';
+    case 'connected':
+      return 'Online';
+    case 'error':
+      return lastError.value ?? 'Connection error';
+    default:
+      return 'Offline';
   }
-  const platform = navigator.platform || 'Device';
-  return platform.slice(0, 24);
-}
+});
+
+onMounted(() => {
+  connect();
+});
 
 function startShare() {
   if (!canShare.value) {
@@ -55,6 +72,12 @@ function onSelectPeer(peer: PeerInfo) {
       </p>
       <p class="text-base text-cast-mist md:text-lg">
         Drop files. Find a device. Send over the air on your network.
+      </p>
+      <p
+        class="text-xs"
+        :class="status === 'error' ? 'text-cast-coral' : 'text-cast-mist'"
+      >
+        {{ statusLabel }}
       </p>
     </header>
 
