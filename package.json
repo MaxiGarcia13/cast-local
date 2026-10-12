@@ -25,7 +25,9 @@
     }
   },
   "dependencies": {
-    "astro": "^7.3.8"
+    "@astrojs/vue": "^7.0.3",
+    "astro": "^7.3.8",
+    "vue": "^3.5.43"
   },
   "devDependencies": {
     "@maxigarcia/eslint-config": "^1.14.1",
