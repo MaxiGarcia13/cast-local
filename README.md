@@ -24,7 +24,7 @@ The signaling server only helps peers find each other and exchange WebRTC handsh
 ## How it works
 
 ```text
-Host browser ──WebSocket /ws──► Same HTTP server (rooms, offers, SDP/ICE)
+Host browser ──WebSocket /ws──► Fastify (rooms, offers, SDP/ICE)
      │
      └── WebRTC data channel ────► Guest browser
               (chunks + text)
@@ -32,8 +32,9 @@ Host browser ──WebSocket /ws──► Same HTTP server (rooms, offers, SDP/I
 
 | Piece | Role |
 | --- | --- |
-| Astro + Vue UI | Pick payload, host/join rooms, show transfer progress |
-| Signaling (`/ws` on the app server) | Rooms, peer presence, transfer offers, RTC signaling relay |
+| Vue + Vite SPA (`client/`) | Pick payload, host/join rooms, show transfer progress |
+| Fastify + `ws` (`server/`) | HTTP (prod static) + signaling on `/ws` |
+| Shared protocol (`shared/`) | Message types and signaling URL helpers |
 | WebRTC data channels | Actual file/text transfer between browsers |
 
 ## Requirements
@@ -52,10 +53,10 @@ pnpm dev
 
 That starts:
 
-- **Web app** — Astro on the usual Vite/Astro port (bound with `--host` so phones on the LAN can open it)
-- **Signaling** — WebSocket on port `3001`, proxied to same-origin `/ws` in the browser
+- **Client** — Vite SPA (`--host`, proxies `/ws` → the server)
+- **Server** — Fastify on port `3000` with WebSocket signaling at `/ws`
 
-Then open the printed local/LAN URL on your machines, share something, and join the room from the other device.
+Open the printed local/LAN URL, share something, and join the room from the other device.
 
 ### Production
 
@@ -64,7 +65,7 @@ pnpm build
 pnpm start
 ```
 
-`start` runs **one** Node process: HTTP (Astro + static) and WebSocket signaling on `/ws` (same port). Uses `HOST` / `PORT` (defaults `0.0.0.0` / `4321`).
+`build` compiles the client. `start` runs **one** Fastify process that serves `client/dist` and `/ws` on `HOST` / `PORT` (defaults `0.0.0.0` / `3000`).
 
 ### Deploy on Render
 
@@ -81,15 +82,15 @@ Render sets `PORT` for you. Clients connect with `wss://your-service.onrender.co
 
 | Command | Description |
 | --- | --- |
-| `pnpm dev` | Web + signaling together (development) |
-| `pnpm dev:web` | Astro only |
-| `pnpm dev:server` | Signaling only (port `3001`) |
-| `pnpm build` | Production build |
-| `pnpm start` | Single-process web + `/ws` signaling |
+| `pnpm dev` | Client + server (Nx parallel) |
+| `pnpm build` | Build the Vue SPA |
+| `pnpm start` | Production: static SPA + `/ws` |
 | `pnpm lint` | ESLint |
 | `pnpm lint:fix` | ESLint with autofix |
+| `pnpm release` | Nx independent version + project changelogs |
+| `pnpm release:dry` | Dry-run release |
 
-Override the listen port with `PORT`. In development only, override the standalone signaling port with `SIGNALING_PORT` (default `3001`).
+Override the server listen port with `PORT` (default `3000`).
 
 ## Using it on a LAN
 
@@ -103,15 +104,13 @@ The browser always uses same-origin `/ws` for signaling (`ws:` or `wss:` from th
 ## Project layout
 
 ```text
-src/
-  components/     UI (home picker, room panels, transfer progress)
-  composables/    Signaling, WebRTC, and transfer orchestration
-  domain/p2p/     Shared protocol, chunking, signaling URL helpers
-  pages/          Astro routes (`/`, `/room/[id]`, `/room/[id]/join`)
-  stores/         In-memory share payload between home → room
-server/           Signaling + production HTTP entry (`production.ts`)
-public/           Static assets, PWA bits
+client/           Vue 3 + Vite SPA (UI, Vue Router, PWA assets)
+server/           Fastify + WebSocket signaling
+shared/           P2P protocol types + signaling URL helpers
+nx.json           Nx targets + independent release config
 ```
+
+Each package has its own `package.json` and `CHANGELOG.md`. Versions are managed independently with `pnpm release` (conventional commits, e.g. `feat(client): …`).
 
 ## Privacy note
 

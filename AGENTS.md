@@ -12,47 +12,44 @@ Keep that boundary: do not route file/text contents through the signaling server
 
 ```bash
 pnpm install
-pnpm dev          # Astro (--host) + signaling
-pnpm dev:web      # UI only
-pnpm dev:server   # signaling only (default port 3001)
-pnpm build
-pnpm start        # production: one process — HTTP + /ws signaling
+pnpm dev          # Vite client + Fastify server (parallel)
+pnpm build        # client → client/dist
+pnpm start        # production: Fastify serves client/dist + /ws
 pnpm lint
 pnpm lint:fix
+pnpm release      # nx release (independent package versions)
+pnpm release:dry
 ```
 
 Package manager is **pnpm** (see `packageManager` in `package.json`). Prefer it over npm/yarn.
 
 ## Repository map
 
-| Path               | Responsibility                                       |
-| ------------------ | ---------------------------------------------------- |
-| `src/pages/`       | Astro routes; keep thin, mount Vue apps              |
-| `src/components/`  | Vue UI (home, room, icons)                           |
-| `src/composables/` | Signaling socket, RTC, transfer orchestration        |
-| `src/domain/p2p/`  | Shared types/protocol used by **browser and server** |
-| `src/stores/`      | Client share payload (home → room)                   |
-| `src/utils/`       | Pure helpers (room id, bytes, downloads, …)          |
-| `server/`          | Signaling (`attach-signaling`, dev `index`, prod `production`) |
-| `.cursor/rules/`   | Project coding rules (naming, modules, UI spacing)   |
-
-Import alias: `@/` → `src/`.
+| Path | Responsibility |
+| --- | --- |
+| `client/` | Vue 3 + Vite SPA (`@/` → `client/src`) |
+| `server/` | Fastify HTTP + `ws` signaling on `/ws` |
+| `shared/` | `@cast-local/shared` protocol + signaling URL helpers |
+| `.cursor/rules/` | Project coding rules (naming, modules, UI spacing) |
 
 ## Architecture rules
 
-1. **Shared protocol lives in `src/domain/p2p/`**  
-   Client and signaling message shapes (`ClientMessage`, `ServerMessage`, transfer manifest/control) must stay in sync. Change types here first, then call sites in `server/` and `src/composables/`.
+1. **Shared protocol lives in `shared/`** (`@cast-local/shared`)  
+   Client and signaling message shapes must stay in sync. Change types here first, then call sites in `server/` and `client/`.
 
 2. **Signaling vs data path**
    - Signaling: join room, peer lists, `offer-transfer` / `accept` / `decline`, `rtc-offer` / `rtc-answer` / `ice-candidate`
-   - Data channel: manifest, text, file chunks, completion/errors
-   - Browser always connects to same-origin `SIGNALING_PATH` (`/ws`). Production attaches WS to the HTTP server; dev proxies `/ws` → port `3001`.
+   - Data channel: manifest, text, file chunks, completion/errors (chunk helpers live in `client/src/p2p/`)
+   - Browser always connects to same-origin `SIGNALING_PATH` (`/ws`). Dev: Vite proxies `/ws` → Fastify `:3000`. Prod: same Fastify process.
 
 3. **Rooms**  
-   Host creates/opens a room; guests join an existing open room. Host disconnect closes the room for everyone (`room-closed`). Don't invent a second room model without updating `server/room-registry.ts` and the room UI.
+   Host creates/opens a room; guests join an existing open room. Host disconnect closes the room for everyone (`room-closed`). Don't invent a second room model without updating `server/src/room-registry.ts` and the room UI.
 
 4. **UI stack**  
-   Astro for pages/layout; Vue 3 for interactive UI; Nanostores where shared client state already exists; Tailwind v4 + cast design tokens in `src/styles/global.css`.
+   Vue 3 + Vue Router + Vite; Nanostores for share payload; Tailwind v4 + cast tokens in `client/src/styles/global.css`.
+
+5. **Versioning**  
+   Independent Nx release per package. Prefer scoped conventional commits: `feat(client):`, `fix(server):`, `feat(shared):`.
 
 ## Out of scope / avoid
 

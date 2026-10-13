@@ -14,7 +14,7 @@
     "lint:fix": "eslint --fix .",
     "release": "nx release",
     "release:dry": "nx release --dry-run",
-    "clean": "rm -rf .astro dist node_modules pnpm-lock.yaml client/dist client/node_modules server/node_modules shared/node_modules",
+    "clean": "rm -rf .nx/cache node_modules pnpm-lock.yaml client/dist client/node_modules server/node_modules shared/node_modules",
     "phoenix": "pnpm run clean && pnpm install"
   },
   "devEngines": {
