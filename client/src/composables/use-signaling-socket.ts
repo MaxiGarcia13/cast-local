@@ -2,6 +2,7 @@ import type { ClientMessage, ServerMessage } from '@roomcast/shared';
 import type { SignalingStatus } from './signaling-types';
 import { defaultSignalingUrl } from '@roomcast/shared';
 import { ref } from 'vue';
+import { userProfileStore } from '@/stores/user-profile';
 import { guessDeviceName, guessDeviceType } from '@/utils/device-name';
 
 interface UseSignalingSocketOptions {
@@ -14,6 +15,14 @@ export interface ConnectOptions {
   asHost?: boolean;
   name?: string;
   device?: string;
+  avatarId?: string;
+  colorId?: string;
+}
+
+export interface ProfileUpdate {
+  name: string;
+  avatarId: string;
+  colorId: string;
 }
 
 export function useSignalingSocket(options: UseSignalingSocketOptions) {
@@ -43,8 +52,11 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
       return;
     }
 
-    const name = connectOptions.name ?? guessDeviceName();
+    const profile = userProfileStore.get();
+    const name = connectOptions.name ?? profile.name ?? guessDeviceName();
     const device = connectOptions.device ?? guessDeviceType();
+    const avatarId = connectOptions.avatarId ?? profile.avatarId;
+    const colorId = connectOptions.colorId ?? profile.colorId;
 
     lastError.value = null;
     currentRoomId.value = roomId;
@@ -63,6 +75,8 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
         roomId,
         name,
         device,
+        avatarId,
+        colorId,
         asHost: Boolean(connectOptions.asHost),
       });
     });
@@ -114,6 +128,15 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
     status.value = 'error';
   }
 
+  function updateProfile(profile: ProfileUpdate) {
+    send({
+      type: 'update-profile',
+      name: profile.name,
+      avatarId: profile.avatarId,
+      colorId: profile.colorId,
+    });
+  }
+
   return {
     status,
     lastError,
@@ -122,5 +145,6 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
     connect,
     disconnect,
     setError,
+    updateProfile,
   };
 }

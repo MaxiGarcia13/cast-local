@@ -16,7 +16,16 @@ interface Client {
 
 type RelayMessage = Exclude<
   ServerMessage,
-  { type: 'welcome' | 'peers' | 'peer-joined' | 'peer-left' | 'room-closed' | 'error' }
+  {
+    type:
+      | 'welcome'
+      | 'peers'
+      | 'peer-joined'
+      | 'peer-updated'
+      | 'peer-left'
+      | 'room-closed'
+      | 'error';
+  }
 >;
 
 const clients = new Map<string, Client>();
@@ -48,6 +57,23 @@ export function broadcastToRoom(
 
 export function registerPeer(ws: WebSocket, peer: PeerInfo) {
   clients.set(peer.id, { ws, peer });
+}
+
+export function updatePeer(
+  peerId: string,
+  patch: Pick<PeerInfo, 'name' | 'avatarId' | 'colorId'>,
+): PeerInfo | null {
+  const client = clients.get(peerId);
+  if (!client) {
+    return null;
+  }
+
+  client.peer = {
+    ...client.peer,
+    ...patch,
+    id: peerId,
+  };
+  return client.peer;
 }
 
 export function getClient(peerId: string): Client | undefined {

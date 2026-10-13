@@ -4,6 +4,8 @@ export interface PeerInfo {
   id: string;
   name: string;
   device: string;
+  avatarId: string;
+  colorId: string;
 }
 
 export interface FileMeta {
@@ -28,18 +30,33 @@ export interface IceCandidate {
 }
 
 export type ClientMessage
-  = | { type: 'join-room'; roomId: string; name: string; device?: string; asHost?: boolean }
-    | { type: 'offer-transfer'; to: string; files: FileMeta[]; textPreview?: string | null }
-    | { type: 'accept'; to: string }
-    | { type: 'decline'; to: string }
-    | { type: 'rtc-offer'; to: string; sdp: SessionDescription }
-    | { type: 'rtc-answer'; to: string; sdp: SessionDescription }
-    | { type: 'ice-candidate'; to: string; candidate: IceCandidate | null };
+  = | {
+    type: 'join-room';
+    roomId: string;
+    name: string;
+    device?: string;
+    avatarId?: string;
+    colorId?: string;
+    asHost?: boolean;
+  }
+  | {
+    type: 'update-profile';
+    name: string;
+    avatarId: string;
+    colorId: string;
+  }
+  | { type: 'offer-transfer'; to: string; files: FileMeta[]; textPreview?: string | null }
+  | { type: 'accept'; to: string }
+  | { type: 'decline'; to: string }
+  | { type: 'rtc-offer'; to: string; sdp: SessionDescription }
+  | { type: 'rtc-answer'; to: string; sdp: SessionDescription }
+  | { type: 'ice-candidate'; to: string; candidate: IceCandidate | null };
 
 export type ServerMessage
   = | { type: 'welcome'; peer: PeerInfo; roomId: string }
     | { type: 'peers'; peers: PeerInfo[] }
     | { type: 'peer-joined'; peer: PeerInfo }
+    | { type: 'peer-updated'; peer: PeerInfo }
     | { type: 'peer-left'; id: string }
     | { type: 'room-closed' }
     | { type: 'offer-transfer'; from: string; files: FileMeta[]; textPreview?: string | null }

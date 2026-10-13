@@ -25,6 +25,14 @@ export function useSignalingPresence() {
           peers.value = [...peers.value, message.peer];
         }
         return true;
+      case 'peer-updated':
+        if (self.value?.id === message.peer.id) {
+          self.value = message.peer;
+        }
+        peers.value = peers.value.map((peer) => {
+          return peer.id === message.peer.id ? message.peer : peer;
+        });
+        return true;
       case 'peer-left':
         peers.value = peers.value.filter((peer) => peer.id !== message.id);
         return true;

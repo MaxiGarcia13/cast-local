@@ -1,6 +1,6 @@
 import { atom } from 'nanostores';
-import { isAvatarId, pickRandomAvatarId } from '@/profile/avatar-catalog';
-import { isUserColorId, pickRandomColorId } from '@/profile/user-colors';
+import { isAvatarId, pickRandomAvatarId } from '@/domain/profile/avatar-catalog';
+import { isUserColorId, pickRandomColorId } from '@/domain/profile/user-colors';
 import { guessDeviceName } from '@/utils/device-name';
 
 export interface UserProfile {

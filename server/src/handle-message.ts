@@ -7,8 +7,27 @@ import {
   registerPeer,
   relay,
   send,
+  updatePeer,
 } from './peer-registry.js';
-import { joinRoomAsGuest, joinRoomAsHost } from './room-registry.js';
+import { getPeerRoom, joinRoomAsGuest, joinRoomAsHost } from './room-registry.js';
+
+const DEFAULT_AVATAR_ID = 'peep-1';
+const DEFAULT_COLOR_ID = 'signal';
+
+function sanitizeName(value: string | undefined): string {
+  const name = value?.trim() || 'Guest';
+  return name.slice(0, 24);
+}
+
+function sanitizeAvatarId(value: string | undefined): string {
+  const avatarId = value?.trim() || DEFAULT_AVATAR_ID;
+  return avatarId.slice(0, 32);
+}
+
+function sanitizeColorId(value: string | undefined): string {
+  const colorId = value?.trim() || DEFAULT_COLOR_ID;
+  return colorId.slice(0, 32);
+}
 
 export function handleClientMessage(
   ws: WebSocket,
@@ -35,10 +54,18 @@ export function handleClientMessage(
       return peerId;
     }
 
-    const name = message.name?.trim() || 'Guest';
+    const name = sanitizeName(message.name);
     const device = message.device?.trim() || 'unknown';
+    const avatarId = sanitizeAvatarId(message.avatarId);
+    const colorId = sanitizeColorId(message.colorId);
     const joinedPeerId = crypto.randomUUID();
-    const peer: PeerInfo = { id: joinedPeerId, name, device };
+    const peer: PeerInfo = {
+      id: joinedPeerId,
+      name,
+      device,
+      avatarId,
+      colorId,
+    };
     const asHost = Boolean(message.asHost);
 
     try {
@@ -68,6 +95,24 @@ export function handleClientMessage(
   }
 
   switch (message.type) {
+    case 'update-profile': {
+      const peer = updatePeer(peerId, {
+        name: sanitizeName(message.name),
+        avatarId: sanitizeAvatarId(message.avatarId),
+        colorId: sanitizeColorId(message.colorId),
+      });
+      if (!peer) {
+        send(ws, { type: 'error', message: 'Peer not found' });
+        break;
+      }
+
+      const roomId = getPeerRoom(peerId);
+      send(ws, { type: 'peer-updated', peer });
+      if (roomId) {
+        broadcastToRoom(roomId, { type: 'peer-updated', peer }, peerId);
+      }
+      break;
+    }
     case 'offer-transfer':
       relay(peerId, message.to, {
         type: 'offer-transfer',

@@ -59,6 +59,7 @@ export function useSignaling() {
     currentRoomId: socket.currentRoomId,
     connect: socket.connect,
     disconnect: socket.disconnect,
+    updateProfile: socket.updateProfile,
     send: socket.send,
     offerTransfer: transfer.offerTransfer,
     acceptTransfer: transfer.acceptTransfer,

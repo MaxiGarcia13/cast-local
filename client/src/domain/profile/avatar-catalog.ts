@@ -3,7 +3,7 @@ import { pickRandomItem } from '@/utils/pick-random';
 const AVATAR_COUNT = 105;
 
 const avatarUrlByPath = import.meta.glob(
-  '../components/icons/avatars/peep-*.svg',
+  '../../components/icons/avatars/peep-*.svg',
   {
     eager: true,
     query: '?url',
