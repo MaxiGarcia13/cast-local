@@ -8,9 +8,9 @@
     "skipLibCheck": true
   },
   "references": [
-    { "path": "./client" },
-    { "path": "./server" },
-    { "path": "./shared" }
+    { "path": "./packages/client" },
+    { "path": "./packages/server" },
+    { "path": "./packages/shared" }
   ],
   "files": []
 }

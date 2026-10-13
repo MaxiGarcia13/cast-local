@@ -30,12 +30,12 @@ Host browser ──WebSocket /ws──► Fastify (rooms, offers, SDP/ICE)
               (chunks + text)
 ```
 
-| Piece                       | Role                                                  |
-| --------------------------- | ----------------------------------------------------- |
-| Vue + Vite SPA (`client/`)  | Pick payload, host/join rooms, show transfer progress |
-| Fastify + `ws` (`server/`)  | HTTP (prod static) + signaling on `/ws`               |
-| Shared protocol (`shared/`) | Message types and signaling URL helpers               |
-| WebRTC data channels        | Actual file/text transfer between browsers            |
+| Piece                                | Role                                                  |
+| ------------------------------------ | ----------------------------------------------------- |
+| Vue + Vite SPA (`packages/client/`)  | Pick payload, host/join rooms, show transfer progress |
+| Fastify + `ws` (`packages/server/`)  | HTTP (prod static) + signaling on `/ws`               |
+| Shared protocol (`packages/shared/`) | Message types and signaling URL helpers               |
+| WebRTC data channels                 | Actual file/text transfer between browsers            |
 
 ## Requirements
 
@@ -65,7 +65,7 @@ pnpm build
 pnpm start
 ```
 
-`build` compiles **shared**, **client**, and **server**. `start` runs the built server with plain `node` (`server/dist/index.js`), serving `client/dist` and `/ws` on `HOST` / `PORT` (defaults `0.0.0.0` / `3000`).
+`build` compiles **shared**, **client**, and **server**. `start` runs the built server with plain `node` (`packages/server/dist/index.js`), serving `packages/client/dist` and `/ws` on `HOST` / `PORT` (defaults `0.0.0.0` / `3000`).
 
 ### Deploy on Render
 
@@ -80,15 +80,15 @@ Render sets `PORT` for you. Clients connect with `wss://your-service.onrender.co
 
 ### Useful scripts
 
-| Command            | Description                                 |
-| ------------------ | ------------------------------------------- |
-| `pnpm dev`         | Client + server (Nx parallel)               |
-| `pnpm build`       | Build shared + client + server              |
-| `pnpm start`       | Production: `node server/dist` + static SPA |
-| `pnpm lint`        | ESLint                                      |
-| `pnpm lint:fix`    | ESLint with autofix                         |
-| `pnpm release`     | Nx independent version + project changelogs |
-| `pnpm release:dry` | Dry-run release                             |
+| Command            | Description                                          |
+| ------------------ | ---------------------------------------------------- |
+| `pnpm dev`         | Client + server (Nx parallel)                        |
+| `pnpm build`       | Build shared + client + server                       |
+| `pnpm start`       | Production: `node packages/server/dist` + static SPA |
+| `pnpm lint`        | ESLint                                               |
+| `pnpm lint:fix`    | ESLint with autofix                                  |
+| `pnpm release`     | Nx independent version + project changelogs          |
+| `pnpm release:dry` | Dry-run release                                      |
 
 Override the server listen port with `PORT` (default `3000`).
 
@@ -104,9 +104,9 @@ The browser always uses same-origin `/ws` for signaling (`ws:` or `wss:` from th
 ## Project layout
 
 ```text
-client/           Vue 3 + Vite SPA (UI, Vue Router, PWA assets)
-server/           Fastify + WebSocket signaling
-shared/           P2P protocol types + signaling URL helpers
+packages/client/  Vue 3 + Vite SPA (UI, Vue Router, PWA assets)
+packages/server/  Fastify + WebSocket signaling
+packages/shared/  P2P protocol types + signaling URL helpers
 nx.json           Nx targets + independent release config
 ```
 
