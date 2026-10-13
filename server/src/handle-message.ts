@@ -1,5 +1,5 @@
+import type { ClientMessage, PeerInfo } from '@cast-local/shared';
 import type { WebSocket } from 'ws';
-import type { ClientMessage, PeerInfo } from '@/domain/p2p';
 import {
   broadcastToRoom,
   hasPeer,

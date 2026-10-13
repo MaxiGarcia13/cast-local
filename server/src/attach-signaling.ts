@@ -1,6 +1,6 @@
 import type { Server } from 'node:http';
+import { SIGNALING_PATH } from '@cast-local/shared';
 import { WebSocketServer } from 'ws';
-import { SIGNALING_PATH } from '@/domain/p2p';
 import { handleClientMessage } from './handle-message';
 import { removePeer } from './peer-registry';
 

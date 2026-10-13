@@ -1,5 +1,5 @@
+import type { PeerInfo, ServerMessage } from '@cast-local/shared';
 import type { WebSocket } from 'ws';
-import type { PeerInfo, ServerMessage } from '@/domain/p2p';
 import {
   areInSameRoom,
   dissolveRoom,

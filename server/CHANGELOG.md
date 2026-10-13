@@ -1,5 +1,6 @@
 # Changelog
 
-## 0.1.0
+## 0.0.0
 
-- Initial Fastify + WebSocket signaling server
+- Initial Fastify server with WebSocket signaling on `/ws`
+- Serves `client/dist` in production (SPA fallback)
