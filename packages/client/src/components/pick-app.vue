@@ -6,12 +6,15 @@ import Button from '@/components/button.vue';
 import FilePicker from '@/components/file-picker.vue';
 import CubeSendIcon from '@/components/icons/cube-send.vue';
 import TextComposer from '@/components/text-composer.vue';
+import { usePasteSharePayload } from '@/composables/use-paste-share-payload';
 import { setSharePayload } from '@/stores/share-payload';
 import { createRoomId, roomHostPath } from '@/utils/room-id';
 
 const router = useRouter();
 const files = ref<File[]>([]);
 const text = ref('');
+
+usePasteSharePayload(files, text);
 
 const canShare = computed(() => {
   return files.value.length > 0 || text.value.trim().length > 0;
