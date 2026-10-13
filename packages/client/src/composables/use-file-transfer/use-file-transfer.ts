@@ -5,7 +5,6 @@ import { sendTransferPayload } from './send-payload';
 import {
   applyTransferError,
   createIdleProgress,
-
 } from './transfer-progress';
 
 export function useFileTransfer() {

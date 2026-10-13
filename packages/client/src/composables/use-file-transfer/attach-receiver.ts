@@ -1,8 +1,9 @@
 import type { DataChannelControl, FileMeta } from '@roomcast/shared';
 import type { Ref } from 'vue';
 import type { TransferProgress } from './transfer-progress';
+import type { DownloadableFile } from '@/utils/download-files';
 import { assembleFile, chunkCount, decodeChunk } from '@/domain/p2p';
-import { downloadFiles, type DownloadableFile } from '@/utils/download-files';
+import { downloadFiles } from '@/utils/download-files';
 
 export function attachTransferReceiver(
   channel: RTCDataChannel,

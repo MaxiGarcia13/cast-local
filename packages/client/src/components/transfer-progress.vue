@@ -125,7 +125,7 @@ function copyText() {
         class="truncate rounded-xl bg-cast-ink/50 px-4 py-2 text-xs text-cast-fog"
       >
         {{ fileName }}
-        <span class="text-cast-signal"> saved</span>
+        <span class="text-cast-signal"> received</span>
       </li>
     </ul>
 
