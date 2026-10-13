@@ -6,7 +6,7 @@ import {
   decodeChunk,
   encodeChunk,
   readChunk,
-} from '@/p2p';
+} from '@/domain/p2p';
 import { downloadBlob } from '@/utils/download-blob';
 import { friendlyTransferError } from '@/utils/transfer-errors';
 

@@ -2,7 +2,7 @@ import type { PeerInfo } from '@roomcast/shared';
 import type { Ref } from 'vue';
 import type { useSignaling } from './use-signaling';
 import { computed, ref, watch } from 'vue';
-import { fileToMeta } from '@/p2p';
+import { fileToMeta } from '@/domain/p2p';
 import { textPreview } from '@/utils/text-preview';
 import { useFileTransfer } from './use-file-transfer';
 import { usePeerConnection } from './use-peer-connection';
