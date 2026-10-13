@@ -1,8 +1,3 @@
-packages:
-  - client
-  - server
-  - shared
-
 minimumReleaseAgeExcludePrune: true
 
 trustPolicy: no-downgrade
@@ -11,6 +6,11 @@ trustPolicyExclude:
 
 shellEmulator: true
 
+packages:
+  - client
+  - server
+  - shared
+
 allowBuilds:
   esbuild: true
-  nx: set this to true or false
+  nx: true
