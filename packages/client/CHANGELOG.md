@@ -1,3 +1,13 @@
+## 0.7.0 (2026-10-13)
+
+### 🚀 Features
+
+- Introduce signaling composables for real-time communication ([c9e9344](https://github.com/MaxiGarcia13/roomcast/commit/c9e9344))
+
+### ❤️ Thank You
+
+- Maximiliano Garcia Mortigliengo
+
 ## 0.6.0 (2026-10-13)
 
 ### 🚀 Features
