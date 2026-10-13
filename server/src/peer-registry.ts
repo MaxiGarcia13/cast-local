@@ -76,10 +76,6 @@ export function updatePeer(
   return client.peer;
 }
 
-export function getClient(peerId: string): Client | undefined {
-  return clients.get(peerId);
-}
-
 export function hasPeer(peerId: string): boolean {
   return clients.has(peerId);
 }

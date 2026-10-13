@@ -69,10 +69,6 @@ export function getPeerRoom(peerId: string): string | null {
   return peerRoom.get(peerId) ?? null;
 }
 
-export function getRoomHostId(roomId: string): string | null {
-  return rooms.get(roomId)?.hostId ?? null;
-}
-
 export function isRoomHost(peerId: string): boolean {
   const roomId = peerRoom.get(peerId);
   if (!roomId) {
