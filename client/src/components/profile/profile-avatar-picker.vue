@@ -14,7 +14,7 @@ const avatarId = defineModel<string>({ required: true });
         v-for="id in AVATAR_IDS"
         :key="id"
         type="button"
-        class="relative cursor-pointer aspect-square min-h-0 min-w-0 overflow-hidden rounded-xl border-2 bg-cast-ink/40 transition hover:scale-105"
+        class="relative aspect-square h-13.25 w-13.25 min-h-0 min-w-0 cursor-pointer overflow-hidden rounded-xl border-2 bg-cast-ink/40 transition hover:scale-105"
         :class="avatarId === id ? 'border-cast-signal' : 'border-transparent'"
         :aria-label="id"
         :aria-pressed="avatarId === id"
@@ -26,5 +26,15 @@ const avatarId = defineModel<string>({ required: true });
         />
       </button>
     </div>
+    <p class="text-xs text-cast-mist">
+      Avatars from
+      <a
+        href="https://openpeeps.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline transition hover:text-cast-fog"
+      >Open Peeps</a>
+      (CC0).
+    </p>
   </fieldset>
 </template>
