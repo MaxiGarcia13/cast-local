@@ -15,12 +15,16 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+          ref: ${{ github.ref_name }}
 
-      - run: git pull && git pull --tags
+      - name: Sync latest release commit and tags
+        run: |
+          git fetch origin "${{ github.ref_name }}" --tags --force
+          git reset --hard "origin/${{ github.ref_name }}"
 
       - name: Create GitHub Releases from changelogs
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
 
@@ -52,14 +56,14 @@ jobs:
               continue
             fi
 
-            if [[ ! "$tag" =~ ^@playtiva/([^@]+)@(.+)$ ]]; then
+            if [[ ! "$tag" =~ ^@roomcast/([^@]+)@(.+)$ ]]; then
               echo "::warning::Skipping unrecognized tag: $tag"
               continue
             fi
 
             pkg="${BASH_REMATCH[1]}"
             version="${BASH_REMATCH[2]}"
-            changelog="packages/${pkg}/CHANGELOG.md"
+            changelog="${pkg}/CHANGELOG.md"
 
             if [ ! -f "$changelog" ]; then
               echo "::error::Missing changelog for $tag ($changelog)"
