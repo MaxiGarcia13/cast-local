@@ -10,8 +10,8 @@
     "clean": "rm -rf node_modules dist"
   },
   "dependencies": {
-    "@roomcast/shared": "workspace:*",
     "@nanostores/vue": "^1.1.0",
+    "@roomcast/shared": "workspace:*",
     "nanostores": "^1.5.5",
     "qrcode": "^1.5.4",
     "vue": "^3.5.43",

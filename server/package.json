@@ -10,8 +10,8 @@
     "clean": "rm -rf node_modules dist"
   },
   "dependencies": {
-    "@roomcast/shared": "workspace:*",
     "@fastify/static": "^10.1.6",
+    "@roomcast/shared": "workspace:*",
     "fastify": "^5.12.5",
     "ws": "^8.22.0"
   },
