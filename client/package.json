@@ -1,13 +1,12 @@
 {
   "name": "@cast-local/client",
-  "version": "0.1.0",
-  "private": true,
   "type": "module",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview",
-    "lint": "eslint ."
+    "preview": "vite preview"
   },
   "dependencies": {
     "@cast-local/shared": "workspace:*",

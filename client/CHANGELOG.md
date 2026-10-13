@@ -1,5 +1,5 @@
 # Changelog
 
-## 0.1.0
+## 0.0.0
 
-- Initial Vue + Vite SPA client
+- Initial Vue + Vite SPA with room routes and same-origin `/ws` proxy
