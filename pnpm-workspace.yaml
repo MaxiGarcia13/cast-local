@@ -7,9 +7,7 @@ trustPolicyExclude:
 shellEmulator: true
 
 packages:
-  - client
-  - server
-  - shared
+  - 'packages/*'
 
 allowBuilds:
   esbuild: true
