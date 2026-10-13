@@ -1,3 +1,9 @@
+## 0.2.0 (2026-10-13)
+
+### 🧱 Updated Dependencies
+
+- Updated @roomcast/shared to 0.2.0
+
 ## 0.1.0 (2026-10-13)
 
 ### 🚀 Features
