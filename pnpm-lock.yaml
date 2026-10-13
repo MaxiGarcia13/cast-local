@@ -187,12 +187,12 @@ importers:
 
   client:
     dependencies:
-      '@cast-local/shared':
-        specifier: workspace:*
-        version: link:../shared
       '@nanostores/vue':
         specifier: ^1.1.0
         version: 1.1.0(nanostores@1.5.5)(vue@3.5.43(typescript@5.9.3))
+      '@roomcast/shared':
+        specifier: workspace:*
+        version: link:../shared
       nanostores:
         specifier: ^1.5.5
         version: 1.5.5
@@ -230,12 +230,12 @@ importers:
 
   server:
     dependencies:
-      '@cast-local/shared':
-        specifier: workspace:*
-        version: link:../shared
       '@fastify/static':
         specifier: ^10.1.6
         version: 10.1.6
+      '@roomcast/shared':
+        specifier: workspace:*
+        version: link:../shared
       fastify:
         specifier: ^5.12.5
         version: 5.12.5

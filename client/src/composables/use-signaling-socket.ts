@@ -1,6 +1,6 @@
-import type { ClientMessage, ServerMessage } from '@cast-local/shared';
+import type { ClientMessage, ServerMessage } from '@roomcast/shared';
 import type { SignalingStatus } from './signaling-types';
-import { defaultSignalingUrl } from '@cast-local/shared';
+import { defaultSignalingUrl } from '@roomcast/shared';
 import { ref } from 'vue';
 import { guessDeviceName, guessDeviceType } from '@/utils/device-name';
 

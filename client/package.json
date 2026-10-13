@@ -1,5 +1,5 @@
 {
-  "name": "@cast-local/client",
+  "name": "@roomcast/client",
   "type": "module",
   "version": "0.0.0",
   "private": true,
@@ -10,7 +10,7 @@
     "clean": "rm -rf node_modules dist"
   },
   "dependencies": {
-    "@cast-local/shared": "workspace:*",
+    "@roomcast/shared": "workspace:*",
     "@nanostores/vue": "^1.1.0",
     "nanostores": "^1.5.5",
     "qrcode": "^1.5.4",

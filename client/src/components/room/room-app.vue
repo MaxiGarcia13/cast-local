@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PeerInfo } from '@cast-local/shared';
+import type { PeerInfo } from '@roomcast/shared';
 import { useStore } from '@nanostores/vue';
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';

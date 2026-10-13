@@ -1,7 +1,7 @@
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
-import { SIGNALING_PATH, SIGNALING_PORT } from '@cast-local/shared';
+import { SIGNALING_PATH, SIGNALING_PORT } from '@roomcast/shared';
 import fastifyStatic from '@fastify/static';
 import Fastify from 'fastify';
 import { attachSignaling } from './attach-signaling.js';

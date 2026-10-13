@@ -1,4 +1,4 @@
-# Cast Local
+# Roomcast
 
 Peer-to-peer file and text transfer for devices on the same network — no cloud upload, no accounts, no waiting on a third-party relay for your bytes.
 
@@ -10,7 +10,7 @@ Moving a file between your laptop and phone (or a teammate across the table) is 
 - USB cables and AirDrop only work in narrow setups
 - Large files burn quota, sit in "processing," or never leave the LAN you already share
 
-Cast Local solves that for the common case: **you're nearby, on the same Wi‑Fi (or LAN), and you just want the data to go from A to B.**
+Roomcast solves that for the common case: **you're nearby, on the same Wi‑Fi (or LAN), and you just want the data to go from A to B.**
 
 ## What it does
 
@@ -42,7 +42,7 @@ Host browser ──WebSocket /ws──► Fastify (rooms, offers, SDP/ICE)
 - Node.js (current LTS recommended)
 - [pnpm](https://pnpm.io) 12.x (see `packageManager` in `package.json`)
 - Modern browsers with WebRTC support
-- Devices that can reach each other on the LAN (and both can reach the host running Cast Local)
+- Devices that can reach each other on the LAN (and both can reach the host running Roomcast)
 
 ## Quick start
 
@@ -114,7 +114,7 @@ Each package has its own `package.json` and `CHANGELOG.md`. Versions are managed
 
 ## Privacy note
 
-Cast Local is designed so **payloads stay on the peer path**. You choose which peer in the room receives the files or text — nothing is broadcast to everyone automatically. The signaling server sees room membership and control messages (who is offering what metadata, SDP/ICE), not the file bytes themselves. Still treat room links like a temporary capability: anyone who can join the room can see who's there and may be offered a transfer.
+Roomcast is designed so **payloads stay on the peer path**. You choose which peer in the room receives the files or text — nothing is broadcast to everyone automatically. The signaling server sees room membership and control messages (who is offering what metadata, SDP/ICE), not the file bytes themselves. Still treat room links like a temporary capability: anyone who can join the room can see who's there and may be offered a transfer.
 
 ## License
 

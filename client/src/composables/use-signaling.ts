@@ -1,4 +1,4 @@
-import type { ServerMessage } from '@cast-local/shared';
+import type { ServerMessage } from '@roomcast/shared';
 import { onUnmounted } from 'vue';
 import { useSignalingPresence } from './use-signaling-presence';
 import { useSignalingRtc } from './use-signaling-rtc';

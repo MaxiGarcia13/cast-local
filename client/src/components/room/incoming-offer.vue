@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FileMeta } from '@cast-local/shared';
+import type { FileMeta } from '@roomcast/shared';
 import { computed } from 'vue';
 import { formatBytes } from '@/utils/format-bytes';
 

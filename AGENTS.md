@@ -1,10 +1,10 @@
 # AGENTS.md
 
-Guidance for coding agents working in **Cast Local**.
+Guidance for coding agents working in **Roomcast**.
 
 ## Product
 
-Cast Local is a LAN peer-to-peer file/text transfer app. Users pick a payload, open a room (link + QR), a guest joins, accepts a transfer offer, then bytes move over **WebRTC data channels**. The WebSocket server is **signaling only** (rooms, presence, offers, SDP/ICE relay) — not a file store or relay for payload bytes.
+Roomcast is a LAN peer-to-peer file/text transfer app. Users pick a payload, open a room (link + QR), a guest joins, accepts a transfer offer, then bytes move over **WebRTC data channels**. The WebSocket server is **signaling only** (rooms, presence, offers, SDP/ICE relay) — not a file store or relay for payload bytes.
 
 Keep that boundary: do not route file/text contents through the signaling server.
 
@@ -29,12 +29,12 @@ Package manager is **pnpm** (see `packageManager` in `package.json`). Prefer it 
 | ---------------- | ----------------------------------------------------- |
 | `client/`        | Vue 3 + Vite SPA (`@/` → `client/src`)                |
 | `server/`        | Fastify HTTP + `ws` signaling on `/ws`                |
-| `shared/`        | `@cast-local/shared` protocol + signaling URL helpers |
+| `shared/`        | `@roomcast/shared` protocol + signaling URL helpers |
 | `.cursor/rules/` | Project coding rules (naming, modules, UI spacing)    |
 
 ## Architecture rules
 
-1. **Shared protocol lives in `shared/`** (`@cast-local/shared`)  
+1. **Shared protocol lives in `shared/`** (`@roomcast/shared`)  
    Client and signaling message shapes must stay in sync. Change types here first, then call sites in `server/` and `client/`.
 
 2. **Signaling vs data path**

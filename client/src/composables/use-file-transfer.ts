@@ -1,4 +1,4 @@
-import type { DataChannelControl, FileMeta, TransferManifest } from '@cast-local/shared';
+import type { DataChannelControl, FileMeta, TransferManifest } from '@roomcast/shared';
 import { ref } from 'vue';
 import {
   assembleFile,

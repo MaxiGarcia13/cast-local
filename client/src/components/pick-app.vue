@@ -34,7 +34,7 @@ function startShare() {
     <header class="mb-12 flex flex-col items-center gap-4 text-center">
       <BrandIcon class="size-12 text-cast-signal" />
       <p class="font-display text-5xl font-extrabold tracking-tight text-cast-fog md:text-6xl">
-        Cast Local
+        Roomcast
       </p>
       <p class="text-base text-cast-mist md:text-lg">
         Drop files or text. Share a room link. Send over the air.

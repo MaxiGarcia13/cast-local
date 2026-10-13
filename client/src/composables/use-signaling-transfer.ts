@@ -1,4 +1,4 @@
-import type { ClientMessage, FileMeta, ServerMessage } from '@cast-local/shared';
+import type { ClientMessage, FileMeta, ServerMessage } from '@roomcast/shared';
 import type { IncomingOffer } from './signaling-types';
 import { ref } from 'vue';
 

@@ -1,4 +1,4 @@
-import type { FileMeta } from '@cast-local/shared';
+import type { FileMeta } from '@roomcast/shared';
 
 export type SignalingStatus = 'idle' | 'connecting' | 'connected' | 'error';
 

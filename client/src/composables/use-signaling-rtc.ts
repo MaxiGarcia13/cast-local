@@ -3,7 +3,7 @@ import type {
   IceCandidate,
   ServerMessage,
   SessionDescription,
-} from '@cast-local/shared';
+} from '@roomcast/shared';
 import { ref } from 'vue';
 
 export interface QueuedIceCandidate {

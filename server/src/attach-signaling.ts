@@ -1,5 +1,5 @@
 import type { Server } from 'node:http';
-import { SIGNALING_PATH } from '@cast-local/shared';
+import { SIGNALING_PATH } from '@roomcast/shared';
 import { WebSocketServer } from 'ws';
 import { handleClientMessage } from './handle-message.js';
 import { removePeer } from './peer-registry.js';

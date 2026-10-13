@@ -1,4 +1,4 @@
-import type { PeerInfo, ServerMessage } from '@cast-local/shared';
+import type { PeerInfo, ServerMessage } from '@roomcast/shared';
 import { ref } from 'vue';
 
 export function useSignalingPresence() {

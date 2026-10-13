@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "Cast Local",
-  "short_name": "Cast Local",
+  "name": "Roomcast",
+  "short_name": "Roomcast",
   "description": "Peer-to-peer file transfer on your local network.",
   "start_url": "/",
   "scope": "/",

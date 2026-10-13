@@ -1,4 +1,4 @@
-import type { PeerInfo, ServerMessage } from '@cast-local/shared';
+import type { PeerInfo, ServerMessage } from '@roomcast/shared';
 import type { WebSocket } from 'ws';
 import {
   areInSameRoom,

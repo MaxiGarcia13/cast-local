@@ -1,4 +1,4 @@
-import type { IceCandidate, SessionDescription } from '@cast-local/shared';
+import type { IceCandidate, SessionDescription } from '@roomcast/shared';
 import { onUnmounted, ref } from 'vue';
 
 const ICE_SERVERS: RTCIceServer[] = [
