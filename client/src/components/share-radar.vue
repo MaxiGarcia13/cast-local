@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { PeerInfo } from '@roomcast/shared';
+import { useStore } from '@nanostores/vue';
+import PeerAvatar from '@/components/peer-avatar.vue';
 import PeerDot from '@/components/peer-dot.vue';
+import { userProfileStore } from '@/stores/user-profile';
 
 const props = withDefaults(defineProps<{
   peers: PeerInfo[];
-  selfName: string;
   disabled?: boolean;
 }>(), {
   disabled: false,
@@ -12,7 +14,10 @@ const props = withDefaults(defineProps<{
 
 defineEmits<{
   select: [peer: PeerInfo];
+  editSelf: [];
 }>();
+
+const profile = useStore(userProfileStore);
 
 function peerAngle(index: number): number {
   if (props.peers.length === 0) {
@@ -59,12 +64,21 @@ function peerAngle(index: number): number {
     </div>
 
     <div class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2">
-      <span
-        class="size-16 rounded-full bg-cast-coral"
+      <button
+        type="button"
+        class="rounded-full transition hover:scale-110"
         style="animation: cast-breathe 2.4s ease-in-out infinite"
-      />
+        aria-label="Edit your profile"
+        @click="$emit('editSelf')"
+      >
+        <PeerAvatar
+          :avatar-id="profile.avatarId"
+          :color-id="profile.colorId"
+          size-class="size-16"
+        />
+      </button>
       <span class="text-sm font-semibold text-cast-fog">
-        {{ selfName }}
+        {{ profile.name }}
       </span>
       <span class="text-xs text-cast-mist">
         You

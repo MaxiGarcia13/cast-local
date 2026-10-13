@@ -22,7 +22,6 @@ import {
   hasSharePayload,
   sharePayloadStore,
 } from '@/stores/share-payload';
-import { guessDeviceName } from '@/utils/device-name';
 import { formatReadySummary } from '@/utils/ready-summary';
 import { isValidRoomId } from '@/utils/room-id';
 
@@ -53,7 +52,6 @@ watch(
 const signaling = useSignaling();
 const {
   peers,
-  self,
   status,
   lastError,
   disconnect,
@@ -74,7 +72,6 @@ const {
 
 const roomIsValid = computed(() => isValidRoomId(props.roomId));
 const isHost = computed(() => props.roomRole === 'host');
-const selfName = computed(() => self.value?.name ?? guessDeviceName());
 const radarDisabled = computed(() => !hasPayload.value || isBusy.value);
 
 const statusLabel = computed(() => {
@@ -157,7 +154,6 @@ function onSelectPeer(peer: PeerInfo) {
         v-if="isHost"
         :has-payload="hasPayload"
         :peers="peers"
-        :self-name="selfName"
         :radar-disabled="radarDisabled"
         @select="onSelectPeer"
       />
