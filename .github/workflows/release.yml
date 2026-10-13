@@ -22,16 +22,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Install dependencies
+        uses: ./.github/actions/install
         with:
           fetch-depth: 0
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Configure git author
         uses: MaxiGarcia13/gh-actions/.github/actions/configure-git-author@main

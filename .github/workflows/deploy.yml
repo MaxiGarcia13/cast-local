@@ -20,17 +20,11 @@ jobs:
       name: Production
       url: https://roomcast-pgge.onrender.com/
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Install dependencies
+        uses: ./.github/actions/install
 
       - name: Pull latest changes
         run: git pull origin main
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Trigger Render Deploy Hook
         run: |
