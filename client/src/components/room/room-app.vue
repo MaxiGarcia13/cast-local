@@ -23,7 +23,7 @@ import {
   sharePayloadStore,
 } from '@/stores/share-payload';
 import { userProfileStore } from '@/stores/user-profile';
-import { formatReadySummary } from '@/utils/ready-summary';
+import { formatReadySummary } from '@/utils/payload-summary';
 import { isValidRoomId } from '@/utils/room-id';
 
 interface Props {

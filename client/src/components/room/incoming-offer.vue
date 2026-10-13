@@ -3,6 +3,7 @@ import type { FileMeta } from '@roomcast/shared';
 import { computed } from 'vue';
 import Button from '@/components/button.vue';
 import { formatBytes } from '@/utils/format-bytes';
+import { formatOfferSummary } from '@/utils/payload-summary';
 
 const props = defineProps<{
   peerName: string;
@@ -15,18 +16,10 @@ defineEmits<{
   decline: [];
 }>();
 
-const summary = computed(() => {
-  const parts: string[] = [];
-  if (props.textPreview) {
-    parts.push('text');
-  }
-  if (props.files.length === 1) {
-    parts.push('1 file');
-  } else if (props.files.length > 1) {
-    parts.push(`${props.files.length} files`);
-  }
-  return parts.join(' and ') || 'a transfer';
-});
+const summary = computed(() => formatOfferSummary({
+  fileCount: props.files.length,
+  hasText: Boolean(props.textPreview),
+}));
 </script>
 
 <template>
