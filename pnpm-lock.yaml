@@ -172,6 +172,9 @@ importers:
       '@nx/js':
         specifier: ^22.0.0
         version: 22.7.12(@babel/traverse@7.29.10(supports-color@7.2.0))(nx@22.7.12)(supports-color@7.2.0)
+      '@types/node':
+        specifier: ^26.6.5
+        version: 26.6.5
       eslint:
         specifier: ^10.12.0
         version: 10.12.0(jiti@2.7.0)(supports-color@7.2.0)

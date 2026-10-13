@@ -28,6 +28,7 @@
   "devDependencies": {
     "@maxigarcia/eslint-config": "^1.14.1",
     "@nx/js": "^22.0.0",
+    "@types/node": "^26.6.5",
     "eslint": "^10.12.0",
     "nx": "^22.0.0",
     "prettier": "^3.9.10",
