@@ -17,7 +17,7 @@ const AvatarIcon = computed(() => getAvatarComponent(props.avatarId));
 
 <template>
   <span
-    class="inline-flex shrink-0 overflow-hidden rounded-full border-2 bg-cast-panel"
+    class="relative inline-block shrink-0 overflow-hidden rounded-full border-2 bg-cast-panel"
     :class="sizeClass"
     :style="{
       borderColor: colorHex,
@@ -27,7 +27,7 @@ const AvatarIcon = computed(() => getAvatarComponent(props.avatarId));
     <component
       :is="AvatarIcon"
       v-if="AvatarIcon"
-      class="size-full"
+      class="pointer-events-none absolute inset-0 size-full max-h-none max-w-none"
     />
   </span>
 </template>

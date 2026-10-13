@@ -14,7 +14,7 @@ const avatarId = defineModel<string>({ required: true });
         v-for="id in AVATAR_IDS"
         :key="id"
         type="button"
-        class="aspect-square overflow-hidden rounded-xl border-2 bg-cast-ink/40 transition hover:scale-105"
+        class="relative cursor-pointer aspect-square min-h-0 min-w-0 overflow-hidden rounded-xl border-2 bg-cast-ink/40 transition hover:scale-105"
         :class="avatarId === id ? 'border-cast-signal' : 'border-transparent'"
         :aria-label="id"
         :aria-pressed="avatarId === id"
@@ -22,7 +22,7 @@ const avatarId = defineModel<string>({ required: true });
       >
         <component
           :is="getAvatarComponent(id)"
-          class="size-full"
+          class="pointer-events-none absolute inset-0 size-full max-h-none max-w-none"
         />
       </button>
     </div>
