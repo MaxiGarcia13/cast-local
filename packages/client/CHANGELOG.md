@@ -1,3 +1,13 @@
+## 0.4.0 (2026-10-13)
+
+### 🧹 Chores
+
+- Update meta tags in index.html for improved SEO and clarity ([e1e1443](https://github.com/MaxiGarcia13/roomcast/commit/e1e1443))
+
+### ❤️ Thank You
+
+- Maximiliano Garcia Mortigliengo
+
 ## 0.3.0 (2026-10-13)
 
 ### 🚀 Features
