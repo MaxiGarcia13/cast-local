@@ -57,7 +57,7 @@ async function onDrop(event: DragEvent) {
         {{ isLoading ? 'Preparing files…' : 'Choose files' }}
       </span>
       <span class="text-sm text-cast-mist">
-        Drop them here or click to browse
+        Drop, paste, or click to browse
       </span>
       <input
         type="file"
