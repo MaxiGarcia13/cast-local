@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import type { PeerInfo } from '@roomcast/shared';
-import { useTemplateRef } from 'vue';
-import UserProfileDialog from '@/components/profile/user-profile-dialog.vue';
 import ShareRadar from '@/components/share-radar.vue';
 
 defineProps<{
@@ -13,12 +11,6 @@ defineProps<{
 defineEmits<{
   select: [peer: PeerInfo];
 }>();
-
-const profileDialog = useTemplateRef<{ showModal: () => void }>('profileDialog');
-
-function openProfileDialog() {
-  profileDialog.value?.showModal();
-}
 </script>
 
 <template>
@@ -39,9 +31,6 @@ function openProfileDialog() {
       :peers="peers"
       :disabled="radarDisabled"
       @select="$emit('select', $event)"
-      @edit-self="openProfileDialog"
     />
-
-    <UserProfileDialog ref="profileDialog" />
   </div>
 </template>

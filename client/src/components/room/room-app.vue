@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PeerInfo } from '@roomcast/shared';
 import { useStore } from '@nanostores/vue';
-import { computed, ref, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   IncomingOffer,
@@ -22,6 +22,7 @@ import {
   hasSharePayload,
   sharePayloadStore,
 } from '@/stores/share-payload';
+import { userProfileStore } from '@/stores/user-profile';
 import { formatReadySummary } from '@/utils/ready-summary';
 import { isValidRoomId } from '@/utils/room-id';
 
@@ -55,6 +56,7 @@ const {
   status,
   lastError,
   disconnect,
+  updateProfile,
 } = signaling;
 
 const {
@@ -110,6 +112,19 @@ useScrollIntoView({
       || Boolean(progress.value.receivedText);
   },
 });
+
+const unbindProfileListener = userProfileStore.listen((profile) => {
+  if (status.value !== 'connected') {
+    return;
+  }
+  updateProfile({
+    name: profile.name,
+    avatarId: profile.avatarId,
+    colorId: profile.colorId,
+  });
+});
+
+onUnmounted(unbindProfileListener);
 
 function leaveRoom() {
   resetTransferState();

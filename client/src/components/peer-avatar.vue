@@ -17,7 +17,7 @@ const avatarUrl = computed(() => getAvatarUrl(props.avatarId));
 
 <template>
   <span
-    class="inline-flex shrink-0 overflow-hidden rounded-full border-2 bg-cast-ink/60"
+    class="inline-flex shrink-0 overflow-hidden rounded-full border-2 bg-cast-panel"
     :class="sizeClass"
     :style="{
       borderColor: colorHex,
@@ -28,8 +28,9 @@ const avatarUrl = computed(() => getAvatarUrl(props.avatarId));
       v-if="avatarUrl"
       :src="avatarUrl"
       alt=""
-      class="size-full object-cover"
+      class="size-full object-cover object-top"
       draggable="false"
     >
   </span>
 </template>
+

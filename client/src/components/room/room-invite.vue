@@ -72,7 +72,7 @@ watch(roomUrl, (url) => {
       </p>
       <button
         type="button"
-        class="self-start rounded-lg bg-cast-signal px-3 py-1.5 text-xs font-semibold text-cast-ink transition hover:brightness-110"
+        class="self-start rounded-lg bg-cast-signal px-3 py-1.5 text-xs font-semibold text-cast-ink transition hover:brightness-110 cursor-pointer"
         @click="copyLink"
       >
         {{ copyState === 'copied' ? 'Copied' : copyState === 'failed' ? 'Copy failed' : 'Copy link' }}

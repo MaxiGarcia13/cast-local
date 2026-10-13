@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import AppBrandHeader from '@/components/app-brand-header.vue';
 import FilePicker from '@/components/file-picker.vue';
-import BrandIcon from '@/components/icons/brand.vue';
 import CubeSendIcon from '@/components/icons/cube-send.vue';
 import TextComposer from '@/components/text-composer.vue';
 import { setSharePayload } from '@/stores/share-payload';
@@ -31,15 +31,16 @@ function startShare() {
     class="mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-6 py-12"
     style="animation: cast-fade-up 0.6s ease-out both"
   >
-    <header class="mb-12 flex flex-col items-center gap-4 text-center">
-      <BrandIcon class="size-12 text-cast-signal" />
-      <p class="font-display text-5xl font-extrabold tracking-tight text-cast-fog md:text-6xl">
-        Roomcast
-      </p>
+    <AppBrandHeader>
+      <template #title>
+        <p class="font-display text-5xl font-extrabold tracking-tight text-cast-fog md:text-6xl">
+          Roomcast
+        </p>
+      </template>
       <p class="text-base text-cast-mist md:text-lg">
         Drop files or text. Share a room link. Send over the air.
       </p>
-    </header>
+    </AppBrandHeader>
 
     <main class="flex flex-1 flex-col items-center gap-8">
       <FilePicker v-model="files" />
@@ -47,7 +48,7 @@ function startShare() {
 
       <button
         type="button"
-        class="inline-flex items-center gap-2 rounded-xl bg-cast-signal px-8 py-4 font-display text-lg font-bold text-cast-ink transition enabled:hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+        class="inline-flex items-center gap-2 rounded-xl bg-cast-signal px-8 py-4 font-display text-lg font-bold text-cast-ink transition enabled:hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
         :disabled="!canShare"
         @click="startShare"
       >

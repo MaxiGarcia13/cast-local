@@ -14,7 +14,7 @@ defineEmits<{
   <div class="flex w-full max-w-md items-center justify-between gap-4">
     <button
       type="button"
-      class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm text-cast-mist transition hover:text-cast-fog"
+      class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm text-cast-mist transition hover:text-cast-fog cursor-pointer"
       @click="$emit('leave')"
     >
       <ChevronLeftIcon class="size-4" />
