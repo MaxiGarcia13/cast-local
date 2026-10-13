@@ -39,7 +39,7 @@ Package manager is **pnpm** (see `packageManager` in `package.json`). Prefer it 
 
 2. **Signaling vs data path**
    - Signaling: join room, peer lists, `offer-transfer` / `accept` / `decline`, `rtc-offer` / `rtc-answer` / `ice-candidate`
-   - Data channel: manifest, text, file chunks, completion/errors (chunk helpers live in `client/src/p2p/`)
+   - Data channel: manifest, text, file chunks, completion/errors (chunk helpers live in `client/src/domain/p2p/`)
    - Browser always connects to same-origin `SIGNALING_PATH` (`/ws`). Dev: Vite proxies `/ws` → Fastify `:3000`. Prod: same Fastify process.
 
 3. **Rooms**  

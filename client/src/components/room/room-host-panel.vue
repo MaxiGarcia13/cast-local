@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { PeerInfo } from '@roomcast/shared';
+import Button from '@/components/button.vue';
 import ShareRadar from '@/components/share-radar.vue';
 
 defineProps<{
@@ -20,10 +21,14 @@ defineEmits<{
       class="max-w-md text-center text-sm text-cast-coral"
     >
       No share payload in memory (page refresh?).
-      <a
+      <Button
         href="/"
-        class="underline"
-      >Go back</a>
+        variant="ghost"
+        size="sm"
+        class="inline underline"
+      >
+        Go back
+      </Button>
       to add files or text, then share again.
     </p>
 
