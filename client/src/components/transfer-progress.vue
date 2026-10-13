@@ -111,7 +111,7 @@ async function copyText() {
       v-if="progress.receivedText"
       class="mt-4 rounded-xl bg-cast-ink/50 px-4 py-4"
     >
-      <p class="whitespace-pre-wrap break-words text-sm text-cast-fog">
+      <p class="whitespace-pre-wrap wrap-break-word text-sm text-cast-fog">
         {{ progress.receivedText }}
       </p>
       <Button

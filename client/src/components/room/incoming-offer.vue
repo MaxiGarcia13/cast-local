@@ -46,7 +46,7 @@ const summary = computed(() => {
         <p class="text-xs font-medium uppercase tracking-wide text-cast-mist">
           Text
         </p>
-        <p class="mt-2 whitespace-pre-wrap break-words text-sm text-cast-fog">
+        <p class="mt-2 whitespace-pre-wrap wrap-break-word text-sm text-cast-fog">
           {{ textPreview }}
         </p>
       </div>
