@@ -1,3 +1,17 @@
+## 0.2.1 (2026-10-13)
+
+### 🔄 Refactors
+
+- Update data channel path in AGENTS.md and integrate reusable Button component in room-host-panel.vue for improved code organization and user experience ([ab85a15](https://github.com/MaxiGarcia13/roomcast/commit/ab85a15))
+- Remove unused properties from signaling composables for cleaner code and improved maintainability ([c785a9e](https://github.com/MaxiGarcia13/roomcast/commit/c785a9e))
+- Consolidate payload summary formatting into a new utility module for better code reuse and clarity ([6ad479e](https://github.com/MaxiGarcia13/roomcast/commit/6ad479e))
+- Implement useCopyToClipboard composable for improved clipboard functionality in transfer-progress and room-invite components ([63458ca](https://github.com/MaxiGarcia13/roomcast/commit/63458ca))
+- Replace room-host and room-guest views with a unified room-view component for better code organization and maintainability ([35b6f96](https://github.com/MaxiGarcia13/roomcast/commit/35b6f96))
+
+### ❤️ Thank You
+
+- Maximiliano Garcia Mortigliengo
+
 ## 0.2.0 (2026-10-13)
 
 ### 🧱 Updated Dependencies
