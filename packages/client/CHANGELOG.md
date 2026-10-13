@@ -1,3 +1,19 @@
+## 0.5.0 (2026-10-13)
+
+### 🚀 Features
+
+- Integrate usePasteSharePayload in pick-app component for enhanced file and text sharing ([9c9a3ce](https://github.com/MaxiGarcia13/roomcast/commit/9c9a3ce))
+- Implement usePasteSharePayload composable for handling pasted files and text ([3ccb777](https://github.com/MaxiGarcia13/roomcast/commit/3ccb777))
+
+### 🐞 Fixes
+
+- Refactor file extension normalization in usePasteSharePayload composable ([3ebfd06](https://github.com/MaxiGarcia13/roomcast/commit/3ebfd06))
+- Update file-picker component text for clarity ([be286d6](https://github.com/MaxiGarcia13/roomcast/commit/be286d6))
+
+### ❤️ Thank You
+
+- Maximiliano Garcia Mortigliengo
+
 ## 0.4.0 (2026-10-13)
 
 ### 🧹 Chores
