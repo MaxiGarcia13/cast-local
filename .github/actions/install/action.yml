@@ -1,20 +1,9 @@
 name: Install dependencies
-description: Check out the repo, set up Node and pnpm, and install dependencies
-
-inputs:
-  fetch-depth:
-    description: Number of commits to fetch. 0 means all history.
-    required: false
-    default: "1"
+description: Set up Node and pnpm, and install dependencies
 
 runs:
   using: composite
   steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: ${{ inputs.fetch-depth }}
-
     - name: Setup Node
       uses: actions/setup-node@v4
 

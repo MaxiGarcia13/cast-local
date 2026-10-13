@@ -20,11 +20,14 @@ jobs:
       name: Production
       url: https://roomcast-pgge.onrender.com/
     steps:
-      - name: Install dependencies
-        uses: ./.github/actions/install
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Pull latest changes
         run: git pull origin main
+
+      - name: Install dependencies
+        uses: ./.github/actions/install
 
       - name: Trigger Render Deploy Hook
         run: |
