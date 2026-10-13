@@ -21,9 +21,12 @@ function normalizePastedFile(file: File): File {
     return file;
   }
 
-  const extension = file.type === 'image/jpeg' ? 'jpg'
-    : file.type === 'image/webp' ? 'webp'
-      : file.type === 'image/gif' ? 'gif'
+  const extension = file.type === 'image/jpeg'
+    ? 'jpg'
+    : file.type === 'image/webp'
+      ? 'webp'
+      : file.type === 'image/gif'
+        ? 'gif'
         : 'png';
 
   return new File([file], `pasted-image-${Date.now()}.${extension}`, {
