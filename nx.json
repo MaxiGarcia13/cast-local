@@ -2,12 +2,17 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "defaultBase": "main",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "sharedGlobals": []
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": true
     },
     "lint": {
@@ -15,7 +20,11 @@
     }
   },
   "release": {
-    "projects": ["client", "server", "shared"],
+    "projects": [
+      "client",
+      "server",
+      "shared"
+    ],
     "projectsRelationship": "independent",
     "version": {
       "conventionalCommits": true,
@@ -29,55 +38,81 @@
       "types": {
         "feat": {
           "semverBump": "minor",
-          "changelog": { "title": "🚀 Features" }
+          "changelog": {
+            "title": "🚀 Features"
+          }
         },
         "fix": {
           "semverBump": "patch",
-          "changelog": { "title": "🐞 Fixes" }
+          "changelog": {
+            "title": "🐞 Fixes"
+          }
         },
         "refactor": {
           "semverBump": "patch",
-          "changelog": { "title": "🔄 Refactors" }
+          "changelog": {
+            "title": "🔄 Refactors"
+          }
         },
         "perf": {
           "semverBump": "patch",
-          "changelog": { "title": "🚀 Performance" }
+          "changelog": {
+            "title": "🚀 Performance"
+          }
         },
         "chore": {
           "semverBump": "minor",
-          "changelog": { "title": "🧹 Chores" }
+          "changelog": {
+            "title": "🧹 Chores"
+          }
         },
         "style": {
           "semverBump": "patch",
-          "changelog": { "title": "🎨 Styles" }
+          "changelog": {
+            "title": "🎨 Styles"
+          }
         },
         "build": {
           "semverBump": "minor",
-          "changelog": { "title": "👷 Build" }
+          "changelog": {
+            "title": "👷 Build"
+          }
         },
         "deps": {
           "semverBump": "patch",
-          "changelog": { "title": "🔧 Dependencies" }
+          "changelog": {
+            "title": "🔧 Dependencies"
+          }
         },
         "breaking": {
           "semverBump": "major",
-          "changelog": { "title": "💥 Breaking Changes" }
+          "changelog": {
+            "title": "💥 Breaking Changes"
+          }
         },
         "docs": {
           "semverBump": "none",
-          "changelog": { "title": "📚 Documentation" }
+          "changelog": {
+            "title": "📚 Documentation"
+          }
         },
         "test": {
           "semverBump": "none",
-          "changelog": { "title": "🧪 Tests" }
+          "changelog": {
+            "title": "🧪 Tests"
+          }
         },
         "ci": {
           "semverBump": "none",
-          "changelog": { "title": "🤖 CI/CD" }
+          "changelog": {
+            "title": "🤖 CI/CD"
+          }
         },
         "config": {
           "semverBump": "none",
-          "changelog": { "title": "🔧 Configuration" }
+          "changelog": {
+            "title": "🔧 Configuration"
+          }
         }
       }
     },
@@ -89,5 +124,6 @@
       "tag": true,
       "commitMessage": "chore(release): version packages"
     }
-  }
+  },
+  "analytics": false
 }
