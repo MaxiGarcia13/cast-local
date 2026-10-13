@@ -1,3 +1,13 @@
+## 0.3.0 (2026-10-13)
+
+### 🚀 Features
+
+- Initialize @roomcast/client with core components, routing, and file sharing functionality ([c7a48e0](https://github.com/MaxiGarcia13/roomcast/commit/c7a48e0))
+
+### ❤️ Thank You
+
+- Maximiliano Garcia Mortigliengo
+
 ## 0.2.0 (2026-10-13)
 
 This was a version bump only for @roomcast/shared to align it with other projects, there were no code changes.
