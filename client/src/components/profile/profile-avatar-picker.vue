@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AVATAR_IDS, getAvatarUrl } from '@/domain/profile/avatar-catalog';
+import { AVATAR_IDS, getAvatarComponent } from '@/domain/profile/avatar-catalog';
 
 const avatarId = defineModel<string>({ required: true });
 </script>
@@ -20,12 +20,10 @@ const avatarId = defineModel<string>({ required: true });
         :aria-pressed="avatarId === id"
         @click="avatarId = id"
       >
-        <img
-          :src="getAvatarUrl(id)"
-          :alt="id"
-          class="size-full object-cover"
-          loading="lazy"
-        >
+        <component
+          :is="getAvatarComponent(id)"
+          class="size-full"
+        />
       </button>
     </div>
   </fieldset>

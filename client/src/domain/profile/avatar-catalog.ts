@@ -1,15 +1,22 @@
+import type { Component } from 'vue';
+import { defineAsyncComponent } from 'vue';
 import { pickRandomItem } from '@/utils/pick-random';
 
 const AVATAR_COUNT = 105;
 
-const avatarUrlByPath = import.meta.glob(
-  '../../components/icons/avatars/peep-*.svg',
-  {
-    eager: true,
-    query: '?url',
-    import: 'default',
-  },
-) as Record<string, string>;
+const avatarLoaders = import.meta.glob(
+  '../../components/icons/avatars/peep-*.vue',
+) as Record<string, () => Promise<{ default: Component }>>;
+
+const avatarComponentById = new Map<string, Component>();
+
+for (const [path, loader] of Object.entries(avatarLoaders)) {
+  const match = /\/(peep-\d+)\.vue$/.exec(path);
+  if (!match?.[1]) {
+    continue;
+  }
+  avatarComponentById.set(match[1], defineAsyncComponent(loader));
+}
 
 export const AVATAR_IDS: string[] = Array.from(
   { length: AVATAR_COUNT },
@@ -25,13 +32,11 @@ export function isAvatarId(value: string): boolean {
   return avatarNumber >= 1 && avatarNumber <= AVATAR_COUNT;
 }
 
-export function getAvatarUrl(avatarId: string): string {
+export function getAvatarComponent(avatarId: string): Component | undefined {
   if (!isAvatarId(avatarId)) {
-    return '';
+    return undefined;
   }
-  const pathSuffix = `/${avatarId}.svg`;
-  const entry = Object.entries(avatarUrlByPath).find(([path]) => path.endsWith(pathSuffix));
-  return entry?.[1] ?? '';
+  return avatarComponentById.get(avatarId);
 }
 
 export function pickRandomAvatarId(): string {

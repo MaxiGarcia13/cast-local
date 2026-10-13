@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { getAvatarUrl } from '@/domain/profile/avatar-catalog';
+import { getAvatarComponent } from '@/domain/profile/avatar-catalog';
 import { getUserColorHex } from '@/domain/profile/user-colors';
 
 const props = withDefaults(defineProps<{
@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<{
 });
 
 const colorHex = computed(() => getUserColorHex(props.colorId));
-const avatarUrl = computed(() => getAvatarUrl(props.avatarId));
+const AvatarIcon = computed(() => getAvatarComponent(props.avatarId));
 </script>
 
 <template>
@@ -24,12 +24,10 @@ const avatarUrl = computed(() => getAvatarUrl(props.avatarId));
       boxShadow: `0 0 24px ${colorHex}73`,
     }"
   >
-    <img
-      v-if="avatarUrl"
-      :src="avatarUrl"
-      alt=""
-      class="size-full object-cover object-top"
-      draggable="false"
-    >
+    <component
+      :is="AvatarIcon"
+      v-if="AvatarIcon"
+      class="size-full"
+    />
   </span>
 </template>
