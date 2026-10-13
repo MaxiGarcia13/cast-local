@@ -6,7 +6,7 @@ import type {
 } from '@roomcast/shared';
 import { ref } from 'vue';
 
-export interface QueuedIceCandidate {
+interface QueuedIceCandidate {
   from: string;
   candidate: IceCandidate | null;
 }

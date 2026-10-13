@@ -46,7 +46,6 @@ export function useSignalingPresence() {
 
   return {
     peers,
-    self,
     roomClosed,
     reset,
     handleMessage,

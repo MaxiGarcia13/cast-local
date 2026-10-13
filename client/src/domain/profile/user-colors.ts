@@ -15,7 +15,7 @@ export const USER_COLORS: UserColor[] = [
   { id: 'lime', hex: '#7dce82', label: 'Lime' },
 ];
 
-export function getUserColorById(colorId: string): UserColor | undefined {
+function getUserColorById(colorId: string): UserColor | undefined {
   return USER_COLORS.find((color) => color.id === colorId);
 }
 

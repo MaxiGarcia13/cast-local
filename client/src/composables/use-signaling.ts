@@ -5,8 +5,6 @@ import { useSignalingRtc } from './use-signaling-rtc';
 import { useSignalingSocket } from './use-signaling-socket';
 import { useSignalingTransfer } from './use-signaling-transfer';
 
-export type { IncomingOffer, SignalingStatus } from './signaling-types';
-
 export function useSignaling() {
   const presence = useSignalingPresence();
 
@@ -45,7 +43,6 @@ export function useSignaling() {
 
   return {
     peers: presence.peers,
-    self: presence.self,
     roomClosed: presence.roomClosed,
     status: socket.status,
     lastError: socket.lastError,
@@ -56,11 +53,9 @@ export function useSignaling() {
     lastRtcAnswer: rtc.lastRtcAnswer,
     iceVersion: rtc.iceVersion,
     takeIceCandidates: rtc.takeIceCandidates,
-    currentRoomId: socket.currentRoomId,
     connect: socket.connect,
     disconnect: socket.disconnect,
     updateProfile: socket.updateProfile,
-    send: socket.send,
     offerTransfer: transfer.offerTransfer,
     acceptTransfer: transfer.acceptTransfer,
     declineTransfer: transfer.declineTransfer,

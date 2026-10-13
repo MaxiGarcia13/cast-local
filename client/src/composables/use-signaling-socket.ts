@@ -10,7 +10,7 @@ interface UseSignalingSocketOptions {
   onDisconnected: () => void;
 }
 
-export interface ConnectOptions {
+interface ConnectOptions {
   roomId: string;
   asHost?: boolean;
   name?: string;
@@ -19,7 +19,7 @@ export interface ConnectOptions {
   colorId?: string;
 }
 
-export interface ProfileUpdate {
+interface ProfileUpdate {
   name: string;
   avatarId: string;
   colorId: string;
@@ -28,7 +28,6 @@ export interface ProfileUpdate {
 export function useSignalingSocket(options: UseSignalingSocketOptions) {
   const status = ref<SignalingStatus>('idle');
   const lastError = ref<string | null>(null);
-  const currentRoomId = ref<string | null>(null);
 
   let socket: WebSocket | null = null;
 
@@ -59,7 +58,6 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
     const colorId = connectOptions.colorId ?? profile.colorId;
 
     lastError.value = null;
-    currentRoomId.value = roomId;
     status.value = 'connecting';
 
     const nextSocket = new WebSocket(defaultSignalingUrl());
@@ -97,7 +95,6 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
         return;
       }
       socket = null;
-      currentRoomId.value = null;
       options.onDisconnected();
       if (status.value !== 'error') {
         status.value = 'idle';
@@ -116,7 +113,6 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
   function disconnect() {
     const activeSocket = socket;
     socket = null;
-    currentRoomId.value = null;
     status.value = 'idle';
     lastError.value = null;
     options.onDisconnected();
@@ -140,7 +136,6 @@ export function useSignalingSocket(options: UseSignalingSocketOptions) {
   return {
     status,
     lastError,
-    currentRoomId,
     send,
     connect,
     disconnect,

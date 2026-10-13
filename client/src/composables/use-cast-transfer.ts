@@ -238,7 +238,6 @@ export function useCastTransfer(
     incomingPeerName,
     waitingForAccept,
     isBusy,
-    hasPayload,
     requestTransfer,
     acceptIncoming,
     declineIncoming,
