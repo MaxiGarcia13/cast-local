@@ -2,6 +2,7 @@
 import QRCode from 'qrcode';
 import { computed, onMounted, ref, watch } from 'vue';
 import Button from '@/components/button.vue';
+import { useCopyToClipboard } from '@/composables/use-copy-to-clipboard';
 import { roomJoinPath } from '@/utils/room-id';
 
 const props = defineProps<{
@@ -9,7 +10,7 @@ const props = defineProps<{
 }>();
 
 const qrDataUrl = ref<string | null>(null);
-const copyState = ref<'idle' | 'copied' | 'failed'>('idle');
+const { copy, label: copyLabel } = useCopyToClipboard();
 
 const roomUrl = computed(() => {
   const path = roomJoinPath(props.roomId);
@@ -34,16 +35,8 @@ async function renderQr(url: string) {
   }
 }
 
-async function copyLink() {
-  try {
-    await navigator.clipboard.writeText(roomUrl.value);
-    copyState.value = 'copied';
-    window.setTimeout(() => {
-      copyState.value = 'idle';
-    }, 1500);
-  } catch {
-    copyState.value = 'failed';
-  }
+function copyLink() {
+  void copy(roomUrl.value);
 }
 
 onMounted(() => {
@@ -76,7 +69,7 @@ watch(roomUrl, (url) => {
         class="self-start"
         @click="copyLink"
       >
-        {{ copyState === 'copied' ? 'Copied' : copyState === 'failed' ? 'Copy failed' : 'Copy link' }}
+        {{ copyLabel('Copy link') }}
       </Button>
     </div>
   </div>

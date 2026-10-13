@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { TransferProgress } from '@/composables/use-file-transfer';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import Button from '@/components/button.vue';
+import { useCopyToClipboard } from '@/composables/use-copy-to-clipboard';
 import { formatBytes } from '@/utils/format-bytes';
 
 const props = defineProps<{
@@ -12,7 +13,7 @@ defineEmits<{
   dismiss: [];
 }>();
 
-const copyState = ref<'idle' | 'copied' | 'failed'>('idle');
+const { copy, label: copyLabel } = useCopyToClipboard();
 
 const percent = computed(() => {
   if (props.progress.bytesTotal <= 0) {
@@ -43,19 +44,11 @@ const canDismiss = computed(() =>
   props.progress.phase === 'complete' || props.progress.phase === 'error',
 );
 
-async function copyText() {
+function copyText() {
   if (!props.progress.receivedText) {
     return;
   }
-  try {
-    await navigator.clipboard.writeText(props.progress.receivedText);
-    copyState.value = 'copied';
-    window.setTimeout(() => {
-      copyState.value = 'idle';
-    }, 1500);
-  } catch {
-    copyState.value = 'failed';
-  }
+  void copy(props.progress.receivedText);
 }
 </script>
 
@@ -118,7 +111,7 @@ async function copyText() {
         class="mt-4"
         @click="copyText"
       >
-        {{ copyState === 'copied' ? 'Copied' : copyState === 'failed' ? 'Copy failed' : 'Copy text' }}
+        {{ copyLabel('Copy text') }}
       </Button>
     </div>
 
