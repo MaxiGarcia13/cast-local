@@ -1,3 +1,9 @@
+## 0.5.0 (2026-10-13)
+
+### 🧱 Updated Dependencies
+
+- Updated @roomcast/shared to 0.5.0
+
 ## 0.4.0 (2026-10-13)
 
 ### 🧹 Chores

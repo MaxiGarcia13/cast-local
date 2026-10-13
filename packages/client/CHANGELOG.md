@@ -1,3 +1,23 @@
+## 0.6.0 (2026-10-13)
+
+### 🚀 Features
+
+- Implement file transfer functionality with progress tracking and error handling ([d1a82e1](https://github.com/MaxiGarcia13/roomcast/commit/d1a82e1))
+- Add downloadFiles utility for batch file downloads ([d5ffdbd](https://github.com/MaxiGarcia13/roomcast/commit/d5ffdbd))
+- Add client-zip dependency to client package ([30166e5](https://github.com/MaxiGarcia13/roomcast/commit/30166e5))
+
+### 🐞 Fixes
+
+- Enhance downloadBlob function to manage object URLs more effectively ([82df8f6](https://github.com/MaxiGarcia13/roomcast/commit/82df8f6))
+
+### 🧱 Updated Dependencies
+
+- Updated @roomcast/shared to 0.5.0
+
+### ❤️ Thank You
+
+- Maximiliano Garcia Mortigliengo
+
 ## 0.5.0 (2026-10-13)
 
 ### 🚀 Features
