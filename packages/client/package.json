@@ -12,6 +12,7 @@
   "dependencies": {
     "@nanostores/vue": "^1.1.0",
     "@roomcast/shared": "workspace:*",
+    "client-zip": "^2.5.1",
     "nanostores": "^1.5.5",
     "qrcode": "^1.5.4",
     "vue": "^3.5.43",
