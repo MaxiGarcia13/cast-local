@@ -2,6 +2,7 @@
 import type { UserProfile } from '@/stores/user-profile';
 import { useStore } from '@nanostores/vue';
 import { reactive, useTemplateRef, watch } from 'vue';
+import Button from '@/components/button.vue';
 import Dialog from '@/components/dialog.vue';
 import ProfileAvatarPicker from '@/components/profile/profile-avatar-picker.vue';
 import ProfileColorPicker from '@/components/profile/profile-color-picker.vue';
@@ -86,21 +87,18 @@ defineExpose({
     </div>
 
     <template #footer>
-      <button
-        type="button"
-        class="rounded-xl border border-cast-mist/30 px-4 py-2 text-sm text-cast-fog transition hover:border-cast-coral hover:text-cast-coral"
+      <Button
+        variant="secondary"
         @click="close"
       >
         Cancel
-      </button>
-      <button
-        type="button"
-        class="rounded-xl bg-cast-signal px-4 py-2 text-sm font-semibold text-cast-ink transition hover:brightness-110 disabled:opacity-50"
+      </Button>
+      <Button
         :disabled="!draft.name.trim()"
         @click="save"
       >
         Save
-      </button>
+      </Button>
     </template>
   </Dialog>
 </template>

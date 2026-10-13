@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Button from '@/components/button.vue';
 import ChevronLeftIcon from '@/components/icons/chevron-left.vue';
 
 defineProps<{
@@ -12,14 +13,14 @@ defineEmits<{
 
 <template>
   <div class="flex w-full max-w-md items-center justify-between gap-4">
-    <button
-      type="button"
-      class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm text-cast-mist transition hover:text-cast-fog cursor-pointer"
+    <Button
+      variant="ghost"
+      tone="neutral"
       @click="$emit('leave')"
     >
       <ChevronLeftIcon class="size-4" />
       Leave
-    </button>
+    </Button>
     <p class="text-sm text-cast-mist">
       {{ readySummary }}
     </p>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TransferProgress } from '@/composables/use-file-transfer';
 import { computed, ref } from 'vue';
+import Button from '@/components/button.vue';
 import { formatBytes } from '@/utils/format-bytes';
 
 const props = defineProps<{
@@ -113,13 +114,12 @@ async function copyText() {
       <p class="whitespace-pre-wrap break-words text-sm text-cast-fog">
         {{ progress.receivedText }}
       </p>
-      <button
-        type="button"
-        class="mt-4 rounded-xl bg-cast-signal px-4 py-2 text-sm font-semibold text-cast-ink transition hover:brightness-110"
+      <Button
+        class="mt-4"
         @click="copyText"
       >
         {{ copyState === 'copied' ? 'Copied' : copyState === 'failed' ? 'Copy failed' : 'Copy text' }}
-      </button>
+      </Button>
     </div>
 
     <ul
@@ -143,13 +143,14 @@ async function copyText() {
       {{ progress.error }}
     </p>
 
-    <button
+    <Button
       v-if="canDismiss"
-      type="button"
-      class="mt-4 w-full rounded-xl border border-cast-mist/30 px-4 py-2 text-sm text-cast-fog transition hover:border-cast-signal hover:text-cast-signal"
+      variant="secondary"
+      tone="neutral"
+      class="mt-4 w-full"
       @click="$emit('dismiss')"
     >
       {{ progress.phase === 'error' ? 'Dismiss' : 'Done' }}
-    </button>
+    </Button>
   </div>
 </template>

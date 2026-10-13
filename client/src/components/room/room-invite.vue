@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import QRCode from 'qrcode';
 import { computed, onMounted, ref, watch } from 'vue';
+import Button from '@/components/button.vue';
 import { roomJoinPath } from '@/utils/room-id';
 
 const props = defineProps<{
@@ -70,13 +71,13 @@ watch(roomUrl, (url) => {
       <p class="truncate text-[11px] text-cast-mist">
         {{ roomUrl }}
       </p>
-      <button
-        type="button"
-        class="self-start rounded-lg bg-cast-signal px-3 py-1.5 text-xs font-semibold text-cast-ink transition hover:brightness-110 cursor-pointer"
+      <Button
+        size="sm"
+        class="self-start"
         @click="copyLink"
       >
         {{ copyState === 'copied' ? 'Copied' : copyState === 'failed' ? 'Copy failed' : 'Copy link' }}
-      </button>
+      </Button>
     </div>
   </div>
 </template>

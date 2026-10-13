@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import Button from '@/components/button.vue';
 import UploadIcon from '@/components/icons/upload.vue';
 import { formatBytes } from '@/utils/format-bytes';
 import { snapshotFiles } from '@/utils/snapshot-file';
@@ -84,14 +85,15 @@ async function onDrop(event: DragEvent) {
             {{ formatBytes(file.size) }}
           </p>
         </div>
-        <button
-          type="button"
-          class="shrink-0 rounded-xl px-2 py-2 text-sm text-cast-mist transition hover:text-cast-coral"
+        <Button
+          variant="ghost"
+          size="sm"
+          class="shrink-0"
           aria-label="Remove file"
           @click="removeFile(index)"
         >
           Remove
-        </button>
+        </Button>
       </li>
     </ul>
   </div>

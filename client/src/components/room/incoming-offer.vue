@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FileMeta } from '@roomcast/shared';
 import { computed } from 'vue';
+import Button from '@/components/button.vue';
 import { formatBytes } from '@/utils/format-bytes';
 
 const props = defineProps<{
@@ -69,20 +70,19 @@ const summary = computed(() => {
       </ul>
 
       <div class="mt-6 flex gap-4">
-        <button
-          type="button"
-          class="flex-1 rounded-xl bg-cast-signal px-4 py-2 font-semibold text-cast-ink transition hover:brightness-110"
+        <Button
+          class="flex-1"
           @click="$emit('accept')"
         >
           Accept
-        </button>
-        <button
-          type="button"
-          class="flex-1 rounded-xl border border-cast-mist/30 px-4 py-2 text-cast-fog transition hover:border-cast-coral hover:text-cast-coral"
+        </Button>
+        <Button
+          variant="secondary"
+          class="flex-1"
           @click="$emit('decline')"
         >
           Decline
-        </button>
+        </Button>
       </div>
     </div>
   </div>

@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AppBrandHeader from '@/components/app-brand-header.vue';
+import Button from '@/components/button.vue';
 import FilePicker from '@/components/file-picker.vue';
 import CubeSendIcon from '@/components/icons/cube-send.vue';
 import TextComposer from '@/components/text-composer.vue';
@@ -46,15 +47,14 @@ function startShare() {
       <FilePicker v-model="files" />
       <TextComposer v-model="text" />
 
-      <button
-        type="button"
-        class="inline-flex items-center gap-2 rounded-xl bg-cast-signal px-8 py-4 font-display text-lg font-bold text-cast-ink transition enabled:hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
+      <Button
+        size="lg"
         :disabled="!canShare"
         @click="startShare"
       >
         <CubeSendIcon class="size-6" />
         Share
-      </button>
+      </Button>
     </main>
   </div>
 </template>
