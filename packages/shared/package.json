@@ -17,8 +17,5 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "clean": "rm -rf node_modules dist"
-  },
-  "devDependencies": {
-    "typescript": "^5.9.0"
   }
 }
