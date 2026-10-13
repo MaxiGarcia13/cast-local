@@ -10,7 +10,7 @@
     "dev:client": "nx run client:dev",
     "dev:server": "nx run server:dev",
     "build": "nx run-many -t build",
-    "start": "nx run server:start",
+    "start": "cd server && pnpm start",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "release": "nx release --skip-publish",
