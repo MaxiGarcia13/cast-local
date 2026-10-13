@@ -13,3 +13,4 @@ shellEmulator: true
 
 allowBuilds:
   esbuild: true
+  nx: set this to true or false
