@@ -1,3 +1,13 @@
+## 0.4.0 (2026-10-13)
+
+### 🧹 Chores
+
+- Remove TypeScript dependency from client, server, and shared packages ([ccc4e8c](https://github.com/MaxiGarcia13/roomcast/commit/ccc4e8c))
+
+### ❤️ Thank You
+
+- Maximiliano Garcia Mortigliengo
+
 ## 0.3.0 (2026-10-13)
 
 ### 🚀 Features
