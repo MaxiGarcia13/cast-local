@@ -1,3 +1,17 @@
+## 0.6.0 (2026-10-13)
+
+### 🧹 Chores
+
+- update fastify version and adjust workspace configuration ([a9f9102](https://github.com/MaxiGarcia13/roomcast/commit/a9f9102))
+
+### 🧱 Updated Dependencies
+
+- Updated @roomcast/shared to 0.6.0
+
+### ❤️ Thank You
+
+- Maximiliano Garcia Mortigliengo
+
 ## 0.5.0 (2026-10-13)
 
 ### 🧱 Updated Dependencies
