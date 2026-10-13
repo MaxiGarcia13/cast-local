@@ -25,12 +25,12 @@ Package manager is **pnpm** (see `packageManager` in `package.json`). Prefer it 
 
 ## Repository map
 
-| Path | Responsibility |
-| --- | --- |
-| `client/` | Vue 3 + Vite SPA (`@/` → `client/src`) |
-| `server/` | Fastify HTTP + `ws` signaling on `/ws` |
-| `shared/` | `@cast-local/shared` protocol + signaling URL helpers |
-| `.cursor/rules/` | Project coding rules (naming, modules, UI spacing) |
+| Path             | Responsibility                                        |
+| ---------------- | ----------------------------------------------------- |
+| `client/`        | Vue 3 + Vite SPA (`@/` → `client/src`)                |
+| `server/`        | Fastify HTTP + `ws` signaling on `/ws`                |
+| `shared/`        | `@cast-local/shared` protocol + signaling URL helpers |
+| `.cursor/rules/` | Project coding rules (naming, modules, UI spacing)    |
 
 ## Architecture rules
 

@@ -14,7 +14,7 @@
     "lint:fix": "eslint --fix .",
     "release": "nx release",
     "release:dry": "nx release --dry-run",
-    "clean": "rm -rf .nx/cache node_modules pnpm-lock.yaml client/dist client/node_modules server/node_modules shared/node_modules",
+    "clean": "nx run-many -t clean && rm -rf node_modules pnpm-lock.yaml .nx dist",
     "phoenix": "pnpm run clean && pnpm install"
   },
   "devEngines": {

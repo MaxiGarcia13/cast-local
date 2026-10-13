@@ -5,5 +5,8 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts"
+  },
+  "scripts": {
+    "clean": "rm -rf node_modules dist"
   }
 }

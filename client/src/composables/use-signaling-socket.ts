@@ -1,7 +1,7 @@
-import type { SignalingStatus } from './signaling-types';
 import type { ClientMessage, ServerMessage } from '@cast-local/shared';
-import { ref } from 'vue';
+import type { SignalingStatus } from './signaling-types';
 import { defaultSignalingUrl } from '@cast-local/shared';
+import { ref } from 'vue';
 import { guessDeviceName, guessDeviceType } from '@/utils/device-name';
 
 interface UseSignalingSocketOptions {

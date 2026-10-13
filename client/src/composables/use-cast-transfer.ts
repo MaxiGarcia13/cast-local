@@ -1,6 +1,6 @@
+import type { PeerInfo } from '@cast-local/shared';
 import type { Ref } from 'vue';
 import type { useSignaling } from './use-signaling';
-import type { PeerInfo } from '@cast-local/shared';
 import { computed, ref, watch } from 'vue';
 import { fileToMeta } from '@/p2p';
 import { textPreview } from '@/utils/text-preview';

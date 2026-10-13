@@ -30,12 +30,12 @@ Host browser ──WebSocket /ws──► Fastify (rooms, offers, SDP/ICE)
               (chunks + text)
 ```
 
-| Piece | Role |
-| --- | --- |
-| Vue + Vite SPA (`client/`) | Pick payload, host/join rooms, show transfer progress |
-| Fastify + `ws` (`server/`) | HTTP (prod static) + signaling on `/ws` |
-| Shared protocol (`shared/`) | Message types and signaling URL helpers |
-| WebRTC data channels | Actual file/text transfer between browsers |
+| Piece                       | Role                                                  |
+| --------------------------- | ----------------------------------------------------- |
+| Vue + Vite SPA (`client/`)  | Pick payload, host/join rooms, show transfer progress |
+| Fastify + `ws` (`server/`)  | HTTP (prod static) + signaling on `/ws`               |
+| Shared protocol (`shared/`) | Message types and signaling URL helpers               |
+| WebRTC data channels        | Actual file/text transfer between browsers            |
 
 ## Requirements
 
@@ -71,8 +71,8 @@ pnpm start
 
 Create a **Web Service**:
 
-| Setting | Value |
-| --- | --- |
+| Setting       | Value        |
+| ------------- | ------------ |
 | Build command | `pnpm build` |
 | Start command | `pnpm start` |
 
@@ -80,15 +80,15 @@ Render sets `PORT` for you. Clients connect with `wss://your-service.onrender.co
 
 ### Useful scripts
 
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Client + server (Nx parallel) |
-| `pnpm build` | Build the Vue SPA |
-| `pnpm start` | Production: static SPA + `/ws` |
-| `pnpm lint` | ESLint |
-| `pnpm lint:fix` | ESLint with autofix |
-| `pnpm release` | Nx independent version + project changelogs |
-| `pnpm release:dry` | Dry-run release |
+| Command            | Description                                 |
+| ------------------ | ------------------------------------------- |
+| `pnpm dev`         | Client + server (Nx parallel)               |
+| `pnpm build`       | Build the Vue SPA                           |
+| `pnpm start`       | Production: static SPA + `/ws`              |
+| `pnpm lint`        | ESLint                                      |
+| `pnpm lint:fix`    | ESLint with autofix                         |
+| `pnpm release`     | Nx independent version + project changelogs |
+| `pnpm release:dry` | Dry-run release                             |
 
 Override the server listen port with `PORT` (default `3000`).
 

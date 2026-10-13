@@ -1,5 +1,5 @@
-import type { IncomingOffer } from './signaling-types';
 import type { ClientMessage, FileMeta, ServerMessage } from '@cast-local/shared';
+import type { IncomingOffer } from './signaling-types';
 import { ref } from 'vue';
 
 export function useSignalingTransfer(send: (message: ClientMessage) => void) {
