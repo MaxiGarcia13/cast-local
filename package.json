@@ -13,7 +13,7 @@
     "start": "nx run server:start",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "release": "nx release",
+    "release": "nx release --skip-publish",
     "release:dry": "nx release --dry-run",
     "clean": "nx run-many -t clean && rm -rf node_modules pnpm-lock.yaml .nx dist",
     "phoenix": "pnpm run clean && pnpm install"
