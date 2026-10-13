@@ -65,7 +65,7 @@ pnpm build
 pnpm start
 ```
 
-`build` compiles the client. `start` runs **one** Fastify process that serves `client/dist` and `/ws` on `HOST` / `PORT` (defaults `0.0.0.0` / `3000`).
+`build` compiles **shared**, **client**, and **server**. `start` runs the built server with plain `node` (`server/dist/index.js`), serving `client/dist` and `/ws` on `HOST` / `PORT` (defaults `0.0.0.0` / `3000`).
 
 ### Deploy on Render
 
@@ -83,8 +83,8 @@ Render sets `PORT` for you. Clients connect with `wss://your-service.onrender.co
 | Command            | Description                                 |
 | ------------------ | ------------------------------------------- |
 | `pnpm dev`         | Client + server (Nx parallel)               |
-| `pnpm build`       | Build the Vue SPA                           |
-| `pnpm start`       | Production: static SPA + `/ws`              |
+| `pnpm build`       | Build shared + client + server              |
+| `pnpm start`       | Production: `node server/dist` + static SPA |
 | `pnpm lint`        | ESLint                                      |
 | `pnpm lint:fix`    | ESLint with autofix                         |
 | `pnpm release`     | Nx independent version + project changelogs |

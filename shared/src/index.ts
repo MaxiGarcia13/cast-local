@@ -1,2 +1,2 @@
-export * from './protocol';
-export * from './signaling-url';
+export * from './protocol.js';
+export * from './signaling-url.js';

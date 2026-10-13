@@ -13,8 +13,8 @@ Keep that boundary: do not route file/text contents through the signaling server
 ```bash
 pnpm install
 pnpm dev          # Vite client + Fastify server (parallel)
-pnpm build        # client → client/dist
-pnpm start        # production: Fastify serves client/dist + /ws
+pnpm build        # shared + client + server → */dist
+pnpm start        # production: node server/dist (serves client/dist + /ws)
 pnpm lint
 pnpm lint:fix
 pnpm release      # nx release (independent package versions)

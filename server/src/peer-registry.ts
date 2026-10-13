@@ -7,7 +7,7 @@ import {
   isRoomHost,
   leaveRoom,
   listRoomPeerIds,
-} from './room-registry';
+} from './room-registry.js';
 
 interface Client {
   ws: WebSocket;

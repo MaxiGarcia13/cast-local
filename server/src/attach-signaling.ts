@@ -1,8 +1,8 @@
 import type { Server } from 'node:http';
 import { SIGNALING_PATH } from '@cast-local/shared';
 import { WebSocketServer } from 'ws';
-import { handleClientMessage } from './handle-message';
-import { removePeer } from './peer-registry';
+import { handleClientMessage } from './handle-message.js';
+import { removePeer } from './peer-registry.js';
 
 export function attachSignaling(server: Server): WebSocketServer {
   const webSocketServer = new WebSocketServer({ server, path: SIGNALING_PATH });

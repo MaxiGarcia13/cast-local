@@ -4,8 +4,8 @@ import { fileURLToPath } from 'node:url';
 import { SIGNALING_PATH, SIGNALING_PORT } from '@cast-local/shared';
 import fastifyStatic from '@fastify/static';
 import Fastify from 'fastify';
-import { attachSignaling } from './attach-signaling';
-import { lanAddresses } from './lan-addresses';
+import { attachSignaling } from './attach-signaling.js';
+import { lanAddresses } from './lan-addresses.js';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const host = process.env.HOST || '0.0.0.0';

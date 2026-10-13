@@ -7,8 +7,8 @@ import {
   registerPeer,
   relay,
   send,
-} from './peer-registry';
-import { joinRoomAsGuest, joinRoomAsHost } from './room-registry';
+} from './peer-registry.js';
+import { joinRoomAsGuest, joinRoomAsHost } from './room-registry.js';
 
 export function handleClientMessage(
   ws: WebSocket,

@@ -3,3 +3,4 @@
 ## 0.0.0
 
 - Initial shared P2P protocol and signaling URL helpers
+- Production build via `tsc` → `dist/`

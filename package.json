@@ -7,8 +7,8 @@
   "description": "Peer-to-peer (P2P) local network file transfer tool using WebSockets and WebRTC data channels.",
   "license": "ISC",
   "scripts": {
-    "dev": "nx run-many -t serve,dev --projects=server,client --parallel=2",
-    "build": "nx run client:build",
+    "dev": "nx run-many -t dev --projects=server,client --parallel=2",
+    "build": "nx run-many -t build",
     "start": "nx run server:start",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
