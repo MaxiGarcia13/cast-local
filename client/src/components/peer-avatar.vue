@@ -33,4 +33,3 @@ const avatarUrl = computed(() => getAvatarUrl(props.avatarId));
     >
   </span>
 </template>
-
