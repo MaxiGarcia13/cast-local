@@ -16,8 +16,7 @@ pnpm dev          # Astro (--host) + signaling
 pnpm dev:web      # UI only
 pnpm dev:server   # signaling only (default port 3001)
 pnpm build
-pnpm start        # production: dist/server/entry.mjs + signaling
-pnpm start:web    # built web only (HOST=0.0.0.0)
+pnpm start        # production: one process — HTTP + /ws signaling
 pnpm lint
 pnpm lint:fix
 ```
@@ -34,7 +33,7 @@ Package manager is **pnpm** (see `packageManager` in `package.json`). Prefer it 
 | `src/domain/p2p/`  | Shared types/protocol used by **browser and server** |
 | `src/stores/`      | Client share payload (home → room)                   |
 | `src/utils/`       | Pure helpers (room id, bytes, downloads, …)          |
-| `server/`          | WebSocket signaling (`ws`), room/peer registries     |
+| `server/`          | Signaling (`attach-signaling`, dev `index`, prod `production`) |
 | `.cursor/rules/`   | Project coding rules (naming, modules, UI spacing)   |
 
 Import alias: `@/` → `src/`.
@@ -47,6 +46,7 @@ Import alias: `@/` → `src/`.
 2. **Signaling vs data path**
    - Signaling: join room, peer lists, `offer-transfer` / `accept` / `decline`, `rtc-offer` / `rtc-answer` / `ice-candidate`
    - Data channel: manifest, text, file chunks, completion/errors
+   - Browser always connects to same-origin `SIGNALING_PATH` (`/ws`). Production attaches WS to the HTTP server; dev proxies `/ws` → port `3001`.
 
 3. **Rooms**  
    Host creates/opens a room; guests join an existing open room. Host disconnect closes the room for everyone (`room-closed`). Don't invent a second room model without updating `server/room-registry.ts` and the room UI.

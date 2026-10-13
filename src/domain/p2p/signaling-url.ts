@@ -1,10 +1,15 @@
+/** Dev-only standalone signaling port (proxied by Vite to same-origin `/ws`). */
 export const SIGNALING_PORT = 3001;
+
+/** Shared WebSocket path for local proxy, production, and Render. */
+export const SIGNALING_PATH = '/ws';
 
 export function defaultSignalingUrl(): string {
   if (typeof window === 'undefined') {
-    return `ws://localhost:${SIGNALING_PORT}`;
+    return `ws://localhost:4321${SIGNALING_PATH}`;
   }
 
-  const hostname = window.location.hostname || 'localhost';
-  return `ws://${hostname}:${SIGNALING_PORT}`;
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const host = window.location.host || 'localhost:4321';
+  return `${protocol}//${host}${SIGNALING_PATH}`;
 }

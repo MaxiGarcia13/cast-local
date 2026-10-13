@@ -24,19 +24,17 @@ The signaling server only helps peers find each other and exchange WebRTC handsh
 ## How it works
 
 ```text
-Host browser ──WebSocket──► Signaling server (rooms, offers, SDP/ICE)
-     │                              │
-     │◄───────WebSocket─────────────┘
+Host browser ──WebSocket /ws──► Same HTTP server (rooms, offers, SDP/ICE)
      │
      └── WebRTC data channel ────► Guest browser
               (chunks + text)
 ```
 
-| Piece                                | Role                                                       |
-| ------------------------------------ | ---------------------------------------------------------- |
-| Astro + Vue UI                       | Pick payload, host/join rooms, show transfer progress      |
-| Signaling server (`ws`, port `3001`) | Rooms, peer presence, transfer offers, RTC signaling relay |
-| WebRTC data channels                 | Actual file/text transfer between browsers                 |
+| Piece | Role |
+| --- | --- |
+| Astro + Vue UI | Pick payload, host/join rooms, show transfer progress |
+| Signaling (`/ws` on the app server) | Rooms, peer presence, transfer offers, RTC signaling relay |
+| WebRTC data channels | Actual file/text transfer between browsers |
 
 ## Requirements
 
@@ -55,7 +53,7 @@ pnpm dev
 That starts:
 
 - **Web app** — Astro on the usual Vite/Astro port (bound with `--host` so phones on the LAN can open it)
-- **Signaling** — WebSocket server on port `3001`
+- **Signaling** — WebSocket on port `3001`, proxied to same-origin `/ws` in the browser
 
 Then open the printed local/LAN URL on your machines, share something, and join the room from the other device.
 
@@ -66,33 +64,41 @@ pnpm build
 pnpm start
 ```
 
-`start` runs the built Node server (`dist/server/entry.mjs` on `HOST=0.0.0.0`) plus signaling on port `3001`.
+`start` runs **one** Node process: HTTP (Astro + static) and WebSocket signaling on `/ws` (same port). Uses `HOST` / `PORT` (defaults `0.0.0.0` / `4321`).
+
+### Deploy on Render
+
+Create a **Web Service**:
+
+| Setting | Value |
+| --- | --- |
+| Build command | `pnpm build` |
+| Start command | `pnpm start` |
+
+Render sets `PORT` for you. Clients connect with `wss://your-service.onrender.com/ws` automatically (same origin).
 
 ### Useful scripts
 
-| Command             | Description                               |
-| ------------------- | ----------------------------------------- |
-| `pnpm dev`          | Web + signaling together (development)    |
-| `pnpm dev:web`      | Astro only                                |
-| `pnpm dev:server`   | Signaling only                            |
-| `pnpm build`        | Production build                          |
-| `pnpm start`        | Built web + signaling (production)        |
-| `pnpm start:web`    | Built web only                            |
-| `pnpm start:server` | Signaling only (same as `dev:server`)     |
-| `pnpm preview`      | Astro preview of the build (no signaling) |
-| `pnpm lint`         | ESLint                                    |
-| `pnpm lint:fix`     | ESLint with autofix                       |
+| Command | Description |
+| --- | --- |
+| `pnpm dev` | Web + signaling together (development) |
+| `pnpm dev:web` | Astro only |
+| `pnpm dev:server` | Signaling only (port `3001`) |
+| `pnpm build` | Production build |
+| `pnpm start` | Single-process web + `/ws` signaling |
+| `pnpm lint` | ESLint |
+| `pnpm lint:fix` | ESLint with autofix |
 
-Override the web port with `PORT` (Astro default `4321`) and signaling with `SIGNALING_PORT` (default `3001`).
+Override the listen port with `PORT`. In development only, override the standalone signaling port with `SIGNALING_PORT` (default `3001`).
 
 ## Using it on a LAN
 
-1. Run `pnpm dev` on a machine reachable by others (same Wi‑Fi / network).
+1. Run `pnpm dev` (or `pnpm build && pnpm start`) on a machine reachable by others.
 2. On the host device, open the site via that machine's LAN IP (not only `localhost` if guests are other devices).
 3. Share files/text → open the room → copy the join link or show the QR.
 4. On the guest device, open the join URL and accept the transfer when offered.
 
-Signaling connects to `ws://<same-hostname>:3001`, so the hostname you use for the web app should also resolve for WebSocket access.
+The browser always uses same-origin `/ws` for signaling (`ws:` or `wss:` from the page URL).
 
 ## Project layout
 
@@ -103,7 +109,7 @@ src/
   domain/p2p/     Shared protocol, chunking, signaling URL helpers
   pages/          Astro routes (`/`, `/room/[id]`, `/room/[id]/join`)
   stores/         In-memory share payload between home → room
-server/           WebSocket signaling (rooms + message relay)
+server/           Signaling + production HTTP entry (`production.ts`)
 public/           Static assets, PWA bits
 ```
 

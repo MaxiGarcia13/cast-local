@@ -1,25 +1,19 @@
 {
   "name": "cast-local",
   "type": "module",
-  "version": "1.0.0",
+  "version": "0.0.0",
+  "private": true,
   "packageManager": "pnpm@12.11.2",
   "description": "Peer-to-peer (P2P) local network file transfer tool using WebSockets and WebRTC data channels.",
-  "author": "",
   "license": "ISC",
-  "keywords": [],
-  "main": "index.js",
   "scripts": {
-    "dev": "concurrently -n astro,signal -c cyan,magenta \"astro dev --host\" \"pnpm dev:server\"",
-    "dev:server": "tsx server/index.ts",
-    "dev:web": "astro dev --host",
-    "build": "astro build",
-    "preview": "astro preview",
-    "start": "concurrently -n web,signal -c cyan,magenta \"HOST=0.0.0.0 node ./dist/server/entry.mjs\" \"pnpm start:server\"",
-    "start:server": "tsx server/index.ts",
-    "start:web": "HOST=0.0.0.0 node ./dist/server/entry.mjs",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "clean": "rm -rf .astro dist node_modules pnpm-lock.yaml",
+    "dev": "nx run-many -t serve,dev --projects=server,client --parallel=2",
+    "build": "nx run client:build",
+    "start": "nx run server:start",
+    "lint": "nx run-many -t lint",
+    "release": "nx release",
+    "release:dry": "nx release --dry-run",
+    "clean": "rm -rf .astro dist node_modules pnpm-lock.yaml client/dist client/node_modules server/node_modules shared/node_modules",
     "phoenix": "pnpm run clean && pnpm install"
   },
   "devEngines": {
@@ -29,27 +23,12 @@
       "onFail": "download"
     }
   },
-  "dependencies": {
-    "@astrojs/node": "^11.1.7",
-    "@astrojs/vue": "^7.0.3",
-    "@nanostores/vue": "^1.1.0",
-    "astro": "^7.3.8",
-    "concurrently": "^10.0.6",
-    "nanostores": "^1.5.5",
-    "qrcode": "^1.5.4",
-    "tsx": "^4.23.15",
-    "vue": "^3.5.43",
-    "ws": "^8.22.0"
-  },
   "devDependencies": {
     "@maxigarcia/eslint-config": "^1.14.1",
-    "@tailwindcss/vite": "^4.3.3",
-    "@types/qrcode": "^1.5.6",
-    "@types/ws": "^8.18.2",
+    "@nx/js": "^22.0.0",
     "eslint": "^10.12.0",
-    "eslint-plugin-astro": "^3.1.0",
+    "nx": "^22.0.0",
     "prettier": "^3.9.10",
-    "prettier-plugin-astro": "^1.1.1",
-    "tailwindcss": "^4.3.3"
+    "typescript": "^5.9.0"
   }
 }
