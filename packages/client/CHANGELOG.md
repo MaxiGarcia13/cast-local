@@ -1,3 +1,13 @@
+## 0.8.1 (2026-10-14)
+
+### 🔄 Refactors
+
+- Update default room ID length for improved usability ([909084c](https://github.com/MaxiGarcia13/roomcast/commit/909084c))
+
+### ❤️ Thank You
+
+- Maximiliano Garcia Mortigliengo
+
 ## 0.8.0 (2026-10-14)
 
 ### 🚀 Features
