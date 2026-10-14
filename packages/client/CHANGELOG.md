@@ -1,3 +1,13 @@
+## 0.8.2 (2026-10-14)
+
+### 🔄 Refactors
+
+- Update room ID validation to use dynamic length ([6311f70](https://github.com/MaxiGarcia13/roomcast/commit/6311f70))
+
+### ❤️ Thank You
+
+- Maximiliano Garcia Mortigliengo
+
 ## 0.8.1 (2026-10-14)
 
 ### 🔄 Refactors
