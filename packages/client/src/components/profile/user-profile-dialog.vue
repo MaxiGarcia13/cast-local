@@ -69,7 +69,7 @@ defineExpose({
       <span class="font-display font-bold text-cast-fog">Your profile</span>
     </template>
 
-    <div class="flex w-[min(100vw-3rem,24rem)] flex-col gap-6">
+    <div class="flex w-full flex-col gap-6">
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-cast-mist">Name</span>
         <input

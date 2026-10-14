@@ -9,12 +9,12 @@ const avatarId = defineModel<string>({ required: true });
     <legend class="text-sm font-medium text-cast-mist">
       Avatar
     </legend>
-    <div class="grid max-h-64 grid-cols-5 gap-2 overflow-y-auto pr-2 sm:grid-cols-6">
+    <div class="grid max-h-64 grid-cols-5 gap-2 overflow-y-auto sm:grid-cols-6">
       <button
         v-for="id in AVATAR_IDS"
         :key="id"
         type="button"
-        class="relative aspect-square h-13 w-12 min-h-0 min-w-0 cursor-pointer overflow-hidden rounded-xl border-2 bg-cast-ink/40 transition hover:scale-105"
+        class="relative aspect-square w-full min-h-0 min-w-0 cursor-pointer overflow-hidden rounded-xl border-2 bg-cast-ink/40 transition hover:scale-105"
         :class="avatarId === id ? 'border-cast-signal' : 'border-transparent'"
         :aria-label="id"
         :aria-pressed="avatarId === id"
