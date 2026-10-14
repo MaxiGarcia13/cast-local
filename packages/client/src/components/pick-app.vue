@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import AppBrandHeader from '@/components/app-brand-header.vue';
 import AppModeTabs from '@/components/app-mode-tabs.vue';
 import AppNavHeader from '@/components/app-nav-header.vue';
 import Button from '@/components/button.vue';
@@ -41,16 +40,11 @@ function startShare() {
     <div class="mx-auto flex w-full max-w-lg flex-1 flex-col">
       <AppModeTabs />
 
-      <AppBrandHeader
-        :show-avatar="false"
-        :show-brand="false"
-      >
-        <p class="text-base text-cast-mist md:text-lg">
+      <main class="flex flex-1 flex-col gap-8">
+        <p class="text-center text-base text-cast-mist md:text-lg">
           Drop files or text. Share a room link. Send over the air.
         </p>
-      </AppBrandHeader>
 
-      <main class="flex flex-1 flex-col gap-8">
         <div class="flex w-full flex-col gap-4">
           <div class="flex justify-end">
             <Button
