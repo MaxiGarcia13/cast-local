@@ -1,3 +1,27 @@
+## 0.8.0 (2026-10-14)
+
+### 🚀 Features
+
+- Add custom scrollbar styles for improved UI experience ([02d643e](https://github.com/MaxiGarcia13/roomcast/commit/02d643e))
+- Add AppModeTabs component and integrate into JoinApp and PickApp ([1a2cfc6](https://github.com/MaxiGarcia13/roomcast/commit/1a2cfc6))
+- Enhance AppBrandHeader and AppNavHeader components ([e1a1a8c](https://github.com/MaxiGarcia13/roomcast/commit/e1a1a8c))
+- Add join room form and enhance button component ([b33164d](https://github.com/MaxiGarcia13/roomcast/commit/b33164d))
+- Enhance clipboard functionality for file and text sharing ([057e22a](https://github.com/MaxiGarcia13/roomcast/commit/057e22a))
+- Add join room functionality and enhance navigation ([faae56d](https://github.com/MaxiGarcia13/roomcast/commit/faae56d))
+
+### 🔄 Refactors
+
+- Improve layout and styling of dialog and profile components ([6981ebc](https://github.com/MaxiGarcia13/roomcast/commit/6981ebc))
+- Enhance animations and styling in peer-dot and share-radar components ([b9434e4](https://github.com/MaxiGarcia13/roomcast/commit/b9434e4))
+- Simplify component structure and enhance layout consistency ([4c534ff](https://github.com/MaxiGarcia13/roomcast/commit/4c534ff))
+- Remove AppBrandHeader component and update RoomHeader layout ([7825ec5](https://github.com/MaxiGarcia13/roomcast/commit/7825ec5))
+- Update layout and structure of components for improved UI ([b3daaef](https://github.com/MaxiGarcia13/roomcast/commit/b3daaef))
+- Remove AppBrandHeader from JoinApp and PickApp components ([4630808](https://github.com/MaxiGarcia13/roomcast/commit/4630808))
+
+### ❤️ Thank You
+
+- Maximiliano Garcia Mortigliengo
+
 ## 0.7.0 (2026-10-13)
 
 ### 🚀 Features
