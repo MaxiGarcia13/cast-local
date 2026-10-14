@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "private": true,
   "packageManager": "pnpm@12.11.2",
-  "description": "Peer-to-peer (P2P) local network file transfer tool using WebSockets and WebRTC data channels.",
+  "description": "Peer-to-peer file and text transfer for devices on the same network — no cloud upload, no accounts, no waiting on a third-party relay for your bytes.",
   "license": "ISC",
   "scripts": {
     "dev:client": "nx run client:dev",
