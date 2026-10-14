@@ -123,7 +123,3 @@ Each package has its own `package.json` and `CHANGELOG.md`. Versions are managed
 ## Privacy note
 
 Roomcast is designed so **payloads stay on the peer path**. You choose which peer in the room receives the files or text — nothing is broadcast to everyone automatically. The signaling server sees room membership and control messages (who is offering what metadata, SDP/ICE), not the file bytes themselves. ICE may contact a public STUN server for connectivity checks. Still treat room links like a temporary capability: anyone who can join the room can see who's there and may be offered a transfer.
-
-## License
-
-ISC
