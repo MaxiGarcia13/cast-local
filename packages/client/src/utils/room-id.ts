@@ -1,5 +1,5 @@
 const ROOM_ID_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
-const ROOM_ID_LENGTH = 8;
+const ROOM_ID_LENGTH = 4;
 
 /** Short URL-safe room id for /room/:id */
 export function createRoomId(length = ROOM_ID_LENGTH): string {
