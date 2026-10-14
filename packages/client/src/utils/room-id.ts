@@ -14,7 +14,7 @@ export function createRoomId(length = ROOM_ID_LENGTH): string {
 }
 
 export function isValidRoomId(roomId: string): boolean {
-  return /^[a-z0-9]{6,12}$/.test(roomId.trim());
+  return new RegExp(`^[a-z0-9]{${ROOM_ID_LENGTH}}$`).test(roomId.trim());
 }
 
 /** Accept a raw room id or an invite URL/path and return a normalized id. */
