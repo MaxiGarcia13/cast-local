@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppBrandHeader from '@/components/app-brand-header.vue';
+import AppModeTabs from '@/components/app-mode-tabs.vue';
 import AppNavHeader from '@/components/app-nav-header.vue';
 import JoinRoomForm from '@/components/join-room-form.vue';
 </script>
@@ -10,22 +11,21 @@ import JoinRoomForm from '@/components/join-room-form.vue';
   >
     <AppNavHeader />
 
-    <AppBrandHeader
-      :show-avatar="false"
-      :show-brand="false"
-    >
-      <template #title>
-        <p class="font-display text-5xl font-extrabold tracking-tight text-cast-fog md:text-6xl">
-          Join a room
-        </p>
-      </template>
-      <p class="text-base text-cast-mist md:text-lg">
-        Enter a room code to connect with the host.
-      </p>
-    </AppBrandHeader>
+    <div class="mx-auto flex w-full max-w-lg flex-1 flex-col">
+      <AppModeTabs />
 
-    <main class="flex flex-1 flex-col items-center gap-8">
-      <JoinRoomForm />
-    </main>
+      <AppBrandHeader
+        :show-avatar="false"
+        :show-brand="false"
+      >
+        <p class="text-base text-cast-mist md:text-lg">
+          Enter a room code to connect with the host.
+        </p>
+      </AppBrandHeader>
+
+      <main class="flex flex-1 flex-col gap-8">
+        <JoinRoomForm />
+      </main>
+    </div>
   </div>
 </template>
