@@ -3,6 +3,7 @@ import type { PeerInfo } from '@roomcast/shared';
 import { useStore } from '@nanostores/vue';
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import AppNavHeader from '@/components/app-nav-header.vue';
 import {
   IncomingOffer,
   RoomGuestPanel,
@@ -142,6 +143,8 @@ function onSelectPeer(peer: PeerInfo) {
   <div
     class="mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-6 py-12"
   >
+    <AppNavHeader />
+
     <RoomHeader
       :room-id="roomId"
       :status-label="statusLabel"
