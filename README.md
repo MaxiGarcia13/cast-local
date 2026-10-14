@@ -32,21 +32,21 @@ Host browser ──WebSocket /ws──► Fastify (rooms, offers, SDP/ICE)
               (chunks + text)
 ```
 
-| Piece                                | Role                                                  |
-| ------------------------------------ | ----------------------------------------------------- |
-| Vue + Vite SPA (`packages/client/`)  | Pick payload, host/join rooms, transfer UI             |
-| Fastify + `ws` (`packages/server/`)  | HTTP (prod static) + signaling on `/ws`               |
-| Shared protocol (`packages/shared/`) | Message types and signaling URL helpers               |
-| WebRTC data channels                 | Actual file/text transfer between browsers            |
+| Piece                                | Role                                       |
+| ------------------------------------ | ------------------------------------------ |
+| Vue + Vite SPA (`packages/client/`)  | Pick payload, host/join rooms, transfer UI |
+| Fastify + `ws` (`packages/server/`)  | HTTP (prod static) + signaling on `/ws`    |
+| Shared protocol (`packages/shared/`) | Message types and signaling URL helpers    |
+| WebRTC data channels                 | Actual file/text transfer between browsers |
 
 ### Routes
 
-| Path              | Role                                      |
-| ----------------- | ----------------------------------------- |
-| `/`               | Upload files / compose text → Share       |
-| `/join`           | Enter a room code or paste an invite link |
-| `/room/:id`       | Host room                                 |
-| `/room/:id/join`  | Guest room                                |
+| Path             | Role                                      |
+| ---------------- | ----------------------------------------- |
+| `/`              | Upload files / compose text → Share       |
+| `/join`          | Enter a room code or paste an invite link |
+| `/room/:id`      | Host room                                 |
+| `/room/:id/join` | Guest room                                |
 
 ## Requirements
 
