@@ -11,11 +11,13 @@ const props = withDefaults(defineProps<{
   tone?: 'danger' | 'neutral';
   disabled?: boolean;
   href?: string;
+  type?: 'button' | 'submit' | 'reset';
 }>(), {
   variant: 'primary',
   size: 'md',
   tone: 'danger',
   disabled: false,
+  type: 'button',
 });
 
 const attrs = useAttrs();
@@ -58,7 +60,7 @@ const variantClass = computed(() => {
     :is="tag"
     v-bind="attrs"
     :href="href"
-    :type="href ? undefined : 'button'"
+    :type="href ? undefined : type"
     :disabled="href ? undefined : disabled"
     :class="[baseClass, sizeClass, variantClass]"
   >

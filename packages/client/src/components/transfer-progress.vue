@@ -56,7 +56,6 @@ function copyText() {
   <div
     v-if="progress.phase !== 'idle'"
     class="w-full max-w-md rounded-xl bg-cast-panel/80 px-4 py-4"
-    style="animation: cast-fade-up 0.35s ease-out both"
   >
     <div class="flex items-center justify-between gap-4 text-sm">
       <p class="font-medium text-cast-fog">

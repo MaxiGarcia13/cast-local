@@ -34,7 +34,6 @@ function startShare() {
 <template>
   <div
     class="mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-6 py-12"
-    style="animation: cast-fade-up 0.6s ease-out both"
   >
     <AppNavHeader />
 
