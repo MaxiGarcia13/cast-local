@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AppBrandHeader from '@/components/app-brand-header.vue';
+import AppNavHeader from '@/components/app-nav-header.vue';
 import Button from '@/components/button.vue';
 import FilePicker from '@/components/file-picker.vue';
 import CubeSendIcon from '@/components/icons/cube-send.vue';
@@ -35,7 +36,9 @@ function startShare() {
     class="mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-6 py-12"
     style="animation: cast-fade-up 0.6s ease-out both"
   >
-    <AppBrandHeader>
+    <AppNavHeader />
+
+    <AppBrandHeader :show-avatar="false">
       <template #title>
         <p class="font-display text-5xl font-extrabold tracking-tight text-cast-fog md:text-6xl">
           Roomcast

@@ -5,9 +5,11 @@ import ProfileAvatarButton from '@/components/profile/profile-avatar-button.vue'
 withDefaults(defineProps<{
   brandSizeClass?: string;
   spacingClass?: string;
+  showAvatar?: boolean;
 }>(), {
   brandSizeClass: 'size-12',
   spacingClass: 'mb-12',
+  showAvatar: true,
 });
 </script>
 
@@ -25,7 +27,10 @@ withDefaults(defineProps<{
         <slot name="title" />
       </div>
 
-      <div class="absolute right-0 top-0">
+      <div
+        v-if="showAvatar"
+        class="absolute right-0 top-0"
+      >
         <ProfileAvatarButton size-class="size-12" />
       </div>
     </div>
