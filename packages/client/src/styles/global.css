@@ -1,6 +1,7 @@
 @import './fonts.css';
 @import 'tailwindcss';
 @import './animations.css';
+@import './scroll.css';
 
 @theme {
   --font-display: 'Fira Code', ui-monospace, monospace;
