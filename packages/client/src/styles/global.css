@@ -12,6 +12,10 @@
   --color-cast-mist: #9aa8c7;
   --color-cast-signal: #ff7a1a;
   --color-cast-coral: #ff9a3c;
+
+  --animate-cast-pulse-ring: cast-pulse-ring 3s ease-out infinite;
+  --animate-cast-sweep: cast-sweep 4s linear infinite;
+  --animate-cast-peer-pulse: cast-peer-pulse 2.8s ease-in-out infinite;
 }
 
 html,

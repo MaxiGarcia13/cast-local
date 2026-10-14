@@ -29,24 +29,17 @@ function peerAngle(index: number): number {
 <template>
   <div class="relative mx-auto aspect-square w-full max-w-md">
     <div
-      class="pointer-events-none absolute inset-8 rounded-full border border-cast-mist/20"
-      style="animation: cast-pulse-ring 3s ease-out infinite"
+      class="pointer-events-none absolute inset-8 animate-cast-pulse-ring rounded-full border border-cast-mist/20"
     />
     <div
-      class="pointer-events-none absolute inset-16 rounded-full border border-cast-mist/25"
-      style="animation: cast-pulse-ring 3s ease-out 0.6s infinite"
+      class="pointer-events-none absolute inset-16 animate-cast-pulse-ring rounded-full border border-cast-mist/25 delay-[0.6s]"
     />
     <div
-      class="pointer-events-none absolute inset-24 rounded-full border border-cast-signal/20"
-      style="animation: cast-pulse-ring 3s ease-out 1.2s infinite"
+      class="pointer-events-none absolute inset-24 animate-cast-pulse-ring rounded-full border border-cast-signal/20 delay-[1.2s]"
     />
 
     <div
-      class="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] origin-center rounded-full"
-      style="
-        background: conic-gradient(from 0deg, transparent 0deg, rgb(255 122 26 / 0.18) 40deg, transparent 80deg);
-        animation: cast-sweep 4s linear infinite;
-      "
+      class="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] origin-center animate-cast-sweep rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,rgb(255_122_26_/_0.18)_40deg,transparent_80deg)]"
     />
 
     <div class="absolute left-1/2 top-1/2 z-0 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2">
