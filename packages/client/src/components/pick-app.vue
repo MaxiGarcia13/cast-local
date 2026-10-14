@@ -15,7 +15,7 @@ const router = useRouter();
 const files = ref<File[]>([]);
 const text = ref('');
 
-usePasteSharePayload(files, text);
+const { pasteFromClipboard, pasteLabel } = usePasteSharePayload(files, text);
 
 const canShare = computed(() => {
   return files.value.length > 0 || text.value.trim().length > 0;
@@ -50,7 +50,20 @@ function startShare() {
     </AppBrandHeader>
 
     <main class="flex flex-1 flex-col items-center gap-8">
-      <FilePicker v-model="files" />
+      <div class="flex w-full max-w-lg flex-col gap-4">
+        <div class="flex justify-end">
+          <Button
+            variant="secondary"
+            size="sm"
+            tone="neutral"
+            @click="pasteFromClipboard"
+          >
+            {{ pasteLabel('Paste from clipboard') }}
+          </Button>
+        </div>
+        <FilePicker v-model="files" />
+      </div>
+
       <TextComposer v-model="text" />
 
       <Button
