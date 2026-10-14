@@ -28,7 +28,7 @@ function onInput() {
 
 <template>
   <form
-    class="flex w-full max-w-lg flex-col gap-4"
+    class="flex w-full flex-col gap-4"
     @submit.prevent="joinRoom"
   >
     <div class="flex flex-col gap-2">

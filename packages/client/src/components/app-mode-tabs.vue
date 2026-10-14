@@ -11,7 +11,7 @@ const activeClass = 'bg-cast-ink/80 font-semibold text-cast-fog shadow-sm';
 
 <template>
   <nav
-    class="mb-8 flex w-full items-center gap-1 rounded-xl border border-cast-mist/20 bg-cast-panel/60 p-1"
+    class="mx-auto mb-8 flex w-full max-w-lg items-center gap-1 rounded-xl border border-cast-mist/20 bg-cast-panel/60 p-1"
     aria-label="App mode"
   >
     <RouterLink

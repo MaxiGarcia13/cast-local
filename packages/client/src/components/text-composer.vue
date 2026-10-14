@@ -3,7 +3,7 @@ const text = defineModel<string>({ default: '' });
 </script>
 
 <template>
-  <div class="flex w-full max-w-lg flex-col gap-2">
+  <div class="flex w-full flex-col gap-2">
     <label
       for="cast-text"
       class="text-sm font-medium text-cast-mist"

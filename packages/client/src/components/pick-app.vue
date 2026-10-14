@@ -36,41 +36,35 @@ function startShare() {
     class="mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-6 py-12"
   >
     <AppNavHeader />
+    <AppModeTabs />
 
-    <div class="mx-auto flex w-full max-w-lg flex-1 flex-col">
-      <AppModeTabs />
+    <main class="mx-auto flex w-full max-w-lg flex-1 flex-col gap-8">
+      <p class="text-center text-base text-cast-mist md:text-lg">
+        Drop files or text. Share a room link. Send over the air.
+      </p>
 
-      <main class="flex flex-1 flex-col gap-8">
-        <p class="text-center text-base text-cast-mist md:text-lg">
-          Drop files or text. Share a room link. Send over the air.
-        </p>
+      <Button
+        variant="secondary"
+        size="sm"
+        tone="neutral"
+        class="self-end -mb-4"
+        @click="pasteFromClipboard"
+      >
+        {{ pasteLabel('Paste from clipboard') }}
+      </Button>
 
-        <div class="flex w-full flex-col gap-4">
-          <div class="flex justify-end">
-            <Button
-              variant="secondary"
-              size="sm"
-              tone="neutral"
-              @click="pasteFromClipboard"
-            >
-              {{ pasteLabel('Paste from clipboard') }}
-            </Button>
-          </div>
-          <FilePicker v-model="files" />
-        </div>
+      <FilePicker v-model="files" />
+      <TextComposer v-model="text" />
 
-        <TextComposer v-model="text" />
-
-        <Button
-          size="lg"
-          class="self-center"
-          :disabled="!canShare"
-          @click="startShare"
-        >
-          <CubeSendIcon class="size-6" />
-          Share
-        </Button>
-      </main>
-    </div>
+      <Button
+        size="lg"
+        class="self-center"
+        :disabled="!canShare"
+        @click="startShare"
+      >
+        <CubeSendIcon class="size-6" />
+        Share
+      </Button>
+    </main>
   </div>
 </template>

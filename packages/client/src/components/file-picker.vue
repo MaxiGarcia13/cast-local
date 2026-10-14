@@ -45,7 +45,7 @@ async function onDrop(event: DragEvent) {
 </script>
 
 <template>
-  <div class="flex w-full max-w-lg flex-col gap-4">
+  <div class="flex w-full flex-col gap-4">
     <label
       class="flex cursor-pointer flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-cast-mist/40 bg-cast-panel/40 px-6 py-12 text-center transition hover:border-cast-signal/60 hover:bg-cast-panel/70"
       :class="{ 'pointer-events-none opacity-60': isLoading }"
