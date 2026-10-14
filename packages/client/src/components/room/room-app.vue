@@ -140,59 +140,55 @@ function onSelectPeer(peer: PeerInfo) {
 </script>
 
 <template>
-  <div
-    class="mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-6 py-12"
+  <AppNavHeader />
+
+  <RoomHeader
+    :room-id="roomId"
+    :status-label="statusLabel"
+    :is-error="status === 'error'"
+  />
+
+  <RoomInvalid v-if="!roomIsValid" />
+
+  <main
+    v-else
+    class="flex flex-1 flex-col items-center gap-8"
   >
-    <AppNavHeader />
+    <RoomToolbar
+      :ready-summary="readySummary"
+      @leave="leaveRoom"
+    />
 
-    <RoomHeader
+    <RoomInvite
+      v-if="isHost"
       :room-id="roomId"
-      :status-label="statusLabel"
-      :is-error="status === 'error'"
     />
 
-    <RoomInvalid v-if="!roomIsValid" />
-
-    <main
-      v-else
-      class="flex flex-1 flex-col items-center gap-8"
-    >
-      <RoomToolbar
-        :ready-summary="readySummary"
-        @leave="leaveRoom"
-      />
-
-      <RoomInvite
-        v-if="isHost"
-        :room-id="roomId"
-      />
-
-      <RoomHostPanel
-        v-if="isHost"
-        :has-payload="hasPayload"
-        :peers="peers"
-        :radar-disabled="radarDisabled"
-        @select="onSelectPeer"
-      />
-
-      <RoomGuestPanel v-else />
-
-      <div ref="transferPanel">
-        <RoomTransferPanel
-          :waiting-for-accept="waitingForAccept"
-          :progress="progress"
-          @dismiss="dismissProgress"
-        />
-      </div>
-    </main>
-
-    <IncomingOffer
-      v-if="incomingOffer"
-      :peer-name="incomingPeerName"
-      :files="incomingOffer.files"
-      :text-preview="incomingOffer.textPreview"
-      @accept="acceptIncoming"
-      @decline="declineIncoming"
+    <RoomHostPanel
+      v-if="isHost"
+      :has-payload="hasPayload"
+      :peers="peers"
+      :radar-disabled="radarDisabled"
+      @select="onSelectPeer"
     />
-  </div>
+
+    <RoomGuestPanel v-else />
+
+    <div ref="transferPanel">
+      <RoomTransferPanel
+        :waiting-for-accept="waitingForAccept"
+        :progress="progress"
+        @dismiss="dismissProgress"
+      />
+    </div>
+  </main>
+
+  <IncomingOffer
+    v-if="incomingOffer"
+    :peer-name="incomingPeerName"
+    :files="incomingOffer.files"
+    :text-preview="incomingOffer.textPreview"
+    @accept="acceptIncoming"
+    @decline="declineIncoming"
+  />
 </template>

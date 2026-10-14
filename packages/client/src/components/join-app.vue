@@ -5,18 +5,14 @@ import JoinRoomForm from '@/components/join-room-form.vue';
 </script>
 
 <template>
-  <div
-    class="mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-6 py-12"
-  >
-    <AppNavHeader />
-    <AppModeTabs />
+  <AppNavHeader />
+  <AppModeTabs />
 
-    <main class="mx-auto flex w-full max-w-lg flex-1 flex-col gap-8">
-      <p class="text-center text-base text-cast-mist md:text-lg">
-        Enter a room code to connect with the host.
-      </p>
+  <main class="mx-auto flex w-full max-w-lg flex-1 flex-col gap-8">
+    <p class="text-center text-base text-cast-mist md:text-lg">
+      Enter a room code to connect with the host.
+    </p>
 
-      <JoinRoomForm />
-    </main>
-  </div>
+    <JoinRoomForm />
+  </main>
 </template>
