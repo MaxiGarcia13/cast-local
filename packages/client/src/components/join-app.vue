@@ -10,7 +10,10 @@ import JoinRoomForm from '@/components/join-room-form.vue';
   >
     <AppNavHeader />
 
-    <AppBrandHeader :show-avatar="false">
+    <AppBrandHeader
+      :show-avatar="false"
+      :show-brand="false"
+    >
       <template #title>
         <p class="font-display text-5xl font-extrabold tracking-tight text-cast-fog md:text-6xl">
           Join a room

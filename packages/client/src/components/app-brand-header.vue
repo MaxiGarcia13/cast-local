@@ -6,10 +6,12 @@ withDefaults(defineProps<{
   brandSizeClass?: string;
   spacingClass?: string;
   showAvatar?: boolean;
+  showBrand?: boolean;
 }>(), {
   brandSizeClass: 'size-12',
   spacingClass: 'mb-12',
   showAvatar: true,
+  showBrand: true,
 });
 </script>
 
@@ -21,6 +23,7 @@ withDefaults(defineProps<{
     <div class="relative flex w-full items-start justify-center">
       <div class="flex flex-col items-center gap-4">
         <BrandIcon
+          v-if="showBrand"
           class="text-cast-signal"
           :class="brandSizeClass"
         />

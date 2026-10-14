@@ -37,12 +37,10 @@ function startShare() {
   >
     <AppNavHeader />
 
-    <AppBrandHeader :show-avatar="false">
-      <template #title>
-        <p class="font-display text-5xl font-extrabold tracking-tight text-cast-fog md:text-6xl">
-          Roomcast
-        </p>
-      </template>
+    <AppBrandHeader
+      :show-avatar="false"
+      :show-brand="false"
+    >
       <p class="text-base text-cast-mist md:text-lg">
         Drop files or text. Share a room link. Send over the air.
       </p>
